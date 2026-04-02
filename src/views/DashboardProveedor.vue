@@ -1,257 +1,282 @@
-<script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
-
-const router = useRouter()
-
-// usuario logueado (NIT)
-const user = ref(localStorage.getItem('user'))
-
-const suppliers = ref([])
-const loading = ref(true)
-const error = ref('')
-
-// ✅ Solo proveedores del usuario logueado
-const suppliersFiltrados = computed(() => {
-  return suppliers.value.filter(s => s.nit === user.value)
-})
-
-// ✅ LOGOUT
-const logout = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
-  router.push('/api/login')
-}
-
-const cargarProveedores = async () => {
-  try {
-    const token = localStorage.getItem('token')
-
-    const res = await axios.get('http://localhost:3000/api/suppliers', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-
-    suppliers.value = res.data.map(s => ({
-      ...s,
-      beneficiarios: JSON.parse(s.beneficiarios || '[]'),
-      datos_bancarios: JSON.parse(s.datos_bancarios || '[]')
-    }))
-  } catch {
-    error.value = 'Error cargando proveedores'
-  } finally {
-    loading.value = false
-  }
-}
-
-onMounted(cargarProveedores)
-</script>
-
 <template>
-  <div class="dashboard">
-    <h1>📋 Proveedor asociado al usuario: {{ user }}</h1>
+  <div class="screen">
+    <div class="bg-grid"></div>
+    <div class="glow left"></div>
+    <div class="glow right"></div>
 
-    <!-- BOTÓN SALIR -->
-    <div class="logout">
-      <button @click="logout">Salir</button>
-    </div>
+    <div class="card center-card">
 
-    <div v-if="error" class="error">{{ error }}</div>
+      <div class="center-content">
+        <span class="eyebrow">Iniciaste sesión</span>
 
-    <!-- FACTURA -->
-    <div class="factura-container" v-if="!loading && suppliersFiltrados.length">
-      <div
-        class="factura"
-        v-for="supplier in suppliersFiltrados"
-        :key="supplier.id"
-      >
-        <h2>📄 Información del Proveedor</h2>
+        <h1>Ver Listado de Reservas</h1>
 
-        <div class="factura-grid">
-          <div class="fila">
-            <span class="label">NIT</span>
-            <span class="valor">{{ supplier.nit }}</span>
-          </div>
-
-          <div class="fila">
-            <span class="label">Nombre completo</span>
-            <span class="valor">{{ supplier.nombre }} {{ supplier.apellido }}</span>
-          </div>
-
-          <div class="fila">
-            <span class="label">Cédula</span>
-            <span class="valor">{{ supplier.cedula }}</span>
-          </div>
-
-          <div class="fila">
-            <span class="label">Tipo Proveedor</span>
-            <span class="valor">{{ supplier.tipo_proveedor }}</span>
-          </div>
-
-          <div class="fila">
-            <span class="label">Tipo Persona</span>
-            <span class="valor">{{ supplier.tipo_persona }}</span>
-          </div>
+        <div class="divider">
+          <span></span>
+          <span class="diamond">◆</span>
+          <span></span>
         </div>
 
-        <div class="seccion">
-          <h3>👥 Beneficiarios / Socios</h3>
-          <ul v-if="supplier.beneficiarios?.length">
-            <li v-for="(b, index) in supplier.beneficiarios" :key="index">
-              {{ b }}
-            </li>
-          </ul>
-          <p v-else>No registra</p>
+        <!-- ✅ TABLA -->
+        <div class="table-container" v-if="reservas.length">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Whasapt</th>
+                <th>Fecha</th>
+                <th>Nota</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="r in reservas" :key="r.id">
+                <td>{{ r.name }}</td>
+                <td>{{ r.phone }}</td>
+                <td>{{ r.reservation_date }}</td>
+                <td>{{ r.note || '-' }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <div class="seccion">
-          <h3>🏦 Datos Bancarios</h3>
-          <ul v-if="supplier.datos_bancarios?.length">
-            <li v-for="(d, index) in supplier.datos_bancarios" :key="index">
-              {{ d }}
-            </li>
-          </ul>
-          <p v-else>No registra</p>
-        </div>
+        <p v-else class="empty">No hay reservas</p>
 
-        <div class="estado-box">
-          Estado:
-          <span :class="['estado', supplier.estado?.toLowerCase()]">
-            {{ supplier.estado }}
-          </span>
-        </div>
+        <!-- 🔘 BOTONES -->
+        <button class="btn-primary center-btn" @click="volver">
+          <span>Volver</span>
+        </button>
+
+        <button class="btn-primary center-btn" @click="cerrarSesion">
+          <span>Cerrar sesión</span>
+        </button>
+
       </div>
-    </div>
 
-    <p v-if="loading">Cargando proveedores...</p>
-    <p v-if="!loading && !suppliersFiltrados.length">
-      No hay proveedores asociados a este usuario.
-    </p>
+    </div>
   </div>
 </template>
 
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const reservas = ref([])
+
+// 🔍 Validar expiración del token
+const tokenExpirado = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return payload.exp * 1000 < Date.now()
+  } catch {
+    return true
+  }
+}
+
+// 🔴 LOGOUT
+const cerrarSesion = (mensaje = 'Sesión cerrada') => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('rol')
+  localStorage.removeItem('username')
+
+  alert(mensaje)
+  router.push('/api/login')
+}
+
+// 🔐 VALIDAR SESIÓN
+const validarSesion = () => {
+  const token = localStorage.getItem('token')
+
+  if (!token || tokenExpirado(token)) {
+    cerrarSesion('Tu sesión expiró, inicia sesión nuevamente')
+    return null
+  }
+
+  return token
+}
+
+// 🔙 VOLVER
+const volver = () => {
+  router.push('/dashboard')
+}
+
+// 📡 Obtener reservas
+const obtenerReservas = async () => {
+  try {
+    const token = validarSesion()
+    if (!token) return
+
+    const res = await fetch('/api/proyectos', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    if (res.status === 401) {
+      cerrarSesion('Sesión inválida')
+      return
+    }
+
+    reservas.value = await res.json()
+
+  } catch (error) {
+    console.error('Error cargando reservas:', error)
+  }
+}
+
+// 🚀 AL MONTAR
+onMounted(() => {
+  obtenerReservas()
+})
+</script>
+
 <style scoped>
-.dashboard {
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.screen {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1f2937, #111827);
-  padding: 30px;
-  color: white;
+  background: #0d0d0d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 16px;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-grid,
+.glow {
+  pointer-events: none;
+}
+
+.bg-grid {
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(180,145,80,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,145,80,.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.glow {
+  position: fixed;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: .3;
+}
+.glow.left  { background: radial-gradient(circle, #b4915025, transparent 70%); top: -100px; left: -150px; }
+.glow.right { background: radial-gradient(circle, #b4915015, transparent 70%); bottom: -100px; right: -150px; }
+
+.card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 700px;
+  background: #141414;
+  border: 1px solid rgba(180,145,80,.2);
+  box-shadow: 0 32px 80px rgba(0,0,0,.7);
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.eyebrow {
+  font-size: .65rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #b49150;
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 25px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.3rem;
+  color: #f0e6d0;
+  letter-spacing: .08em;
 }
 
-/* LOGOUT */
-.logout {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.logout button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px;
-  background: black;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.logout button:hover {
-  background: #333;
-}
-
-.error {
-  background: #dc2626;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-/* ===== FACTURA ===== */
-
-.factura-container {
+.divider {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
-.factura {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 20px;
-  padding: 25px;
-  max-width: 900px;
+.divider span:not(.diamond) {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #b49150);
+}
+
+.divider span:last-child {
+  background: linear-gradient(90deg, #b49150, transparent);
+}
+
+.diamond {
+  font-size: .4rem;
+  color: #b49150;
+}
+
+.table-container {
   width: 100%;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-}
-
-.factura h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #38bdf8;
-}
-
-/* Dos columnas estilo factura */
-.factura-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px 30px;
-  margin-bottom: 20px;
-}
-
-.fila {
-  display: flex;
-  flex-direction: column;
-  background: rgba(0,0,0,0.3);
-  padding: 12px 15px;
-  border-radius: 10px;
-}
-
-.label {
-  font-size: 13px;
-  color: #94a3b8;
-}
-
-.valor {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-/* Secciones */
-.seccion {
-  margin-top: 25px;
-}
-
-.seccion h3 {
-  margin-bottom: 10px;
-  color: #60a5fa;
-}
-
-.seccion ul {
-  padding-left: 20px;
-}
-
-.seccion li {
-  margin-bottom: 5px;
-}
-
-/* Estado */
-.estado-box {
   margin-top: 30px;
-  text-align: center;
-  font-size: 18px;
+  overflow-x: auto;
 }
 
-.estado {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-weight: bold;
-  margin-left: 10px;
-  background: #475569;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #f0e6d0;
+  font-size: 0.85rem;
+}
+
+thead {
+  background: rgba(180,145,80,0.1);
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(180,145,80,0.2);
+  text-align: center;
+}
+
+th {
+  color: #b49150;
+  font-weight: 500;
+  letter-spacing: .1em;
+}
+
+tbody tr:hover {
+  background: rgba(180,145,80,0.08);
+}
+
+.empty {
+  margin-top: 20px;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  margin-top: 20px;
+  padding: 14px 40px;
+  border: 1px solid #b49150;
+  background: transparent;
+  color: #b49150;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.btn-primary:hover {
+  background: #b49150;
+  color: #0d0d0d;
 }
 </style>

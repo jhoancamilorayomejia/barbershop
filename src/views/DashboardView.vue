@@ -1,557 +1,156 @@
 <template>
-  <div class="dashboard">
-    <h1>📋 Lista de Proveedores</h1>
+  <div class="screen">
+    <div class="bg-grid"></div>
+    <div class="glow left"></div>
+    <div class="glow right"></div>
 
- 
+    <div class="card center-card">
 
+      <div class="center-content">
+        <span class="eyebrow">Acción completada</span>
 
-    <!-- BOTÓN SALIR -->
-    <div class="logout">
-      <button @click="logout">Salir</button>
-    </div>
+        <h1>Reserva confirmada</h1>
 
-    <!-- ERROR -->
-    <div v-if="error" class="error">{{ error }}</div>
+        <p class="subtitle">
+          Tu turno ha sido registrado correctamente.
+        </p>
 
-    <!-- TABLA -->
-    <div class="table-container" v-if="!loading && suppliers.length">
-      <table>
-        <thead>
-          <tr>
-            <th>NIT</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Cédula</th>
-            <th>Tipo Proveedor</th>
-            <th>Tipo Persona</th>
-            <th>Beneficiarios / Socios</th>
-            <th>Datos Bancarios</th>
-            <th>Acciones</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr v-for="supplier in suppliers" :key="supplier.id">
-            <td>{{ supplier.nit }}</td>
-            <td>{{ supplier.nombre }}</td>
-            <td>{{ supplier.apellido }}</td>
-            <td>{{ supplier.cedula }}</td>
-            <td>{{ supplier.tipo_proveedor }}</td>
-            <td>{{ supplier.tipo_persona }}</td>
-
-            <!-- BENEFICIARIOS -->
-            <td>
-              <div v-if="supplier.beneficiarios?.length">
-                <div v-for="(b, index) in supplier.beneficiarios" :key="index">
-                  {{ b }}
-                </div>
-              </div>
-              <span v-else>No registra</span>
-            </td>
-
-            <!-- DATOS BANCARIOS -->
-            <td>
-              <div v-if="supplier.datos_bancarios?.length">
-                <div v-for="(d, index) in supplier.datos_bancarios" :key="index">
-                  {{ d }}
-                </div>
-              </div>
-              <span v-else>No registra</span>
-            </td>
-
-            <!-- ACCIONES -->
-            <td>
-              <button class="btn-edit" @click="editarProveedor(supplier)">Editar</button>
-              <button class="btn-delete" @click="eliminarProveedor(supplier.id)">Eliminar</button>
-            </td>
-
-            <!-- ESTADO -->
-            <td>
-              <button class="estado-btn" @click="abrirModalEstado(supplier)">
-                {{ supplier.estado }}
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <p v-if="loading">Cargando proveedores...</p>
-
-    <!-- BOTÓN AGREGAR -->
-    <div class="add-btn-container">
-      <button class="btn-add" @click="agregarProveedor">➕ Agregar Proveedor</button>
-    </div>
-
-    <!-- MODAL AGREGAR / EDITAR -->
-    <div v-if="mostrarModal" class="modal-overlay" @click.self="cerrarModal">
-      <div class="modal">
-        <h2>{{ modoEdicion ? 'Editar Proveedor' : 'Agregar Proveedor' }}</h2>
-
-        <form @submit.prevent="guardarProveedor">
-          <input v-model="form.nit" placeholder="NIT" required />
-          <input v-model="form.nombre" placeholder="Nombre" required />
-          <input v-model="form.apellido" placeholder="Apellido" required />
-          <input v-model="form.cedula" placeholder="Cédula" required />
-          <input v-model="form.tipo_proveedor" placeholder="Tipo Proveedor" />
-          <input v-model="form.tipo_persona" placeholder="Tipo Persona" />
-
-          <label>Beneficiarios / Socios (uno por línea)</label>
-          <textarea
-            v-model="form.beneficiariosTexto"
-            rows="4"
-            placeholder="Juan Perez - 12345"
-          ></textarea>
-
-          <label>Datos Bancarios (uno por línea)</label>
-          <textarea
-            v-model="form.datosBancariosTexto"
-            rows="4"
-            placeholder="Banco: Bancolombia | Cuenta: 123456"
-          ></textarea>
-
-          <div class="modal-actions">
-            <button type="submit" class="btn-add">
-              {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
-            </button>
-            <button type="button" class="btn-delete" @click="cerrarModal">
-              Cancelar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- MODAL CAMBIO DE ESTADO (INDEPENDIENTE) -->
-    <div v-if="mostrarModalEstado" class="modal-overlay" @click.self="cerrarModalEstado">
-      <div class="modal">
-        <h2>Cambiar estado del proveedor</h2>
-        <p>Proveedor: {{ proveedorSeleccionado?.nombre }} {{ proveedorSeleccionado?.apellido }}</p>
-        <p>Nit: {{ proveedorSeleccionado?.nit }}</p>
-        <div class="modal-actions">
-          <button class="btn-add" @click="cambiarEstadoSeleccionado('Aprobado')">Aprobar</button>
-          <button class="btn-delete" @click="cambiarEstadoSeleccionado('Rechazado')">Rechazar</button>
-          <button class="btn-cancel" @click="cerrarModalEstado">Cancelar</button>
+        <div class="divider">
+          <span></span>
+          <span class="diamond">◆</span>
+          <span></span>
         </div>
+
+        <!-- BOTÓN -->
+        <button class="btn-primary center-btn" @click="volver">
+          <span>Volver</span>
+        </button>
       </div>
+
     </div>
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
-
-const router = useRouter()
-const suppliers = ref([])
-const loading = ref(true)
-const error = ref('')
-const mostrarModal = ref(false)
-const modoEdicion = ref(false)
-
-
-const form = ref({
-  id: null,
-  nit: '',
-  nombre: '',
-  apellido: '',
-  cedula: '',
-  tipo_proveedor: '',
-  tipo_persona: '',
-  beneficiariosTexto: '',
-  datosBancariosTexto: ''
-
-})
-
-// LOGOUT
-const logout = () => {
-  localStorage.clear()
-  router.push('/api/login')
+const volver = () => {
+  console.log('click funcionando')
+  window.location.href = 'http://localhost:3000/api/login'
 }
-
-// MODAL
-const cerrarModal = () => mostrarModal.value = false
-
-const agregarProveedor = () => {
-  modoEdicion.value = false
-  form.value = {
-    id: null,
-    nit: '',
-    nombre: '',
-    apellido: '',
-    cedula: '',
-    tipo_proveedor: '',
-    tipo_persona: '',
-    beneficiariosTexto: '',
-    datosBancariosTexto: ''
-  }
-  mostrarModal.value = true
-}
-
-// EDITAR
-const editarProveedor = (supplier) => {
-  modoEdicion.value = true
-  form.value = {
-    ...supplier,
-    beneficiariosTexto: supplier.beneficiarios?.join('\n') || '',
-    datosBancariosTexto: supplier.datos_bancarios?.join('\n') || ''
-  }
-  mostrarModal.value = true
-}
-
-// GUARDAR / ACTUALIZAR
-const guardarProveedor = async () => {
-  const token = localStorage.getItem('token')
-
-  const payload = {
-    ...form.value,
-    beneficiarios: JSON.stringify(form.value.beneficiariosTexto.split('\n').filter(Boolean)),
-    datos_bancarios: JSON.stringify(form.value.datosBancariosTexto.split('\n').filter(Boolean))
-  }
-
-  if (modoEdicion.value) {
-    await axios.put(`http://localhost:8080/api/suppliers/${form.value.id}`, payload, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-  } else {
-    await axios.post(`http://localhost:8080/api/suppliers`, payload, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-  }
-
-  cerrarModal()
-  cargarProveedores()
-}
-
-
-const mostrarModalEstado = ref(false)
-const proveedorSeleccionado = ref(null)
-
-// Abrir modal
-const abrirModalEstado = (supplier) => {
-  proveedorSeleccionado.value = supplier
-  mostrarModalEstado.value = true
-}
-
-// Cerrar modal
-const cerrarModalEstado = () => {
-  mostrarModalEstado.value = false
-  proveedorSeleccionado.value = null
-}
-
-// Cambiar estado
-const cambiarEstadoSeleccionado = async (nuevoEstado) => {
-  const token = localStorage.getItem('token')
-  try {
-    proveedorSeleccionado.value.estado = nuevoEstado
-    await axios.put(`http://localhost:8080/api/suppliers/${proveedorSeleccionado.value.id}`, {
-      ...proveedorSeleccionado.value,
-      beneficiarios: JSON.stringify(proveedorSeleccionado.value.beneficiarios),
-      datos_bancarios: JSON.stringify(proveedorSeleccionado.value.datos_bancarios)
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    alert(`Estado actualizado a "${nuevoEstado}"`)
-    cerrarModalEstado()
-    cargarProveedores() // refrescar tabla
-  } catch (err) {
-    console.error(err)
-    alert('Error al actualizar estado')
-  }
-}
-
-
-// ELIMINAR
-const eliminarProveedor = async (id) => {
-  if (!confirm('¿Eliminar proveedor?')) return
-  const token = localStorage.getItem('token')
-  await axios.delete(`http://localhost:8080/api/suppliers/${id}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  cargarProveedores()
-}
-
-
-
-// Aqui recibo lo del backend 
-const cargarProveedores = async () => {
-  try {
-    const token = localStorage.getItem('token')
-    const res = await axios.get('http://localhost:8080/api/suppliers', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    //y asi guardarlo en suppliers.value
-    suppliers.value = res.data.map(s => ({
-      ...s,
-      beneficiarios: JSON.parse(s.beneficiarios || '[]'),
-      datos_bancarios: JSON.parse(s.datos_bancarios || '[]')
-    }))
-  } catch  {
-    error.value = 'Error cargando proveedores'
-  } finally {
-    loading.value = false
-  }
-}
-//cuando carga, hace GET, trae los proveedores y los muesta en la tabla 
-onMounted(cargarProveedores)
 </script>
 
-
-
 <style scoped>
-.dashboard {
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.screen {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1f2937, #111827);
-  padding: 30px;
-  color: white;
-}
-
-/* ================= TÍTULO ================= */
-h1 {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-/* ================= LOGOUT ================= */
-.logout {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.logout button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px;
-  background: black;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.logout button:hover {
-  background: #333;
-}
-
-/* ================= ERROR ================= */
-.error {
-  background: #dc2626;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-/* ================= TABLA ================= */
-.table-container {
-  overflow-x: auto;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-  padding: 15px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 1200px;
-}
-
-thead {
-  background: #0f172a;
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid #334155;
-  vertical-align: top;
-}
-
-th {
-  color: #38bdf8;
-}
-
-/* Contenido interno beneficiarios y bancos */
-td div {
-  margin-bottom: 6px;
-  font-size: 14px;
-}
-
-/* ================= BOTONES ================= */
-.add-btn-container {
-  margin-top: 30px;
-  
-}
-
-.btn-add {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.btn-add:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #16a34a, #15803d);
-}
-
-.btn-edit {
-  background: #3b82f6;
-  border: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-right: 5px;
-}
-
-.btn-edit:hover {
-  background: #2563eb;
-}
-
-.btn-delete {
-  background: #ef4444;
-  border: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 38px;
-  cursor: pointer;
-}
-
-.btn-delete:hover {
-  background: #dc2626;
-}
-
-/* ================= MODAL ================= */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
+  background: #0d0d0d;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 60px;
-  z-index: 999;
+  padding: 60px 16px;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  overflow: hidden;
 }
 
-.modal {
-  background: #1f2937;
-  width: 500px;
-  max-height: 85vh;
-  overflow-y: auto;
-  border-radius: 20px;
-  padding: 25px;
-  animation: slideDown 0.4s ease;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+/* 🔥 IMPORTANTE: no bloquear clicks */
+.bg-grid,
+.glow {
+  pointer-events: none;
 }
 
-@keyframes slideDown {
-  from { transform: translateY(-80px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+.bg-grid {
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(180,145,80,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,145,80,.03) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
 
-/* ================= FORMULARIO ================= */
-.modal h2 {
-  text-align: center;
-  margin-bottom: 15px;
+.glow {
+  position: fixed;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: .3;
 }
+.glow.left  { background: radial-gradient(circle, #b4915025, transparent 70%); top: -100px; left: -150px; }
+.glow.right { background: radial-gradient(circle, #b4915015, transparent 70%); bottom: -100px; right: -150px; }
 
-.modal label {
-  font-weight: bold;
-  color: #93c5fd;
-  margin: 10px 0 5px;
-  display: block;
-}
+/* 🔥 IMPORTANTE: asegurar que esté encima */
+.card {
+  position: relative;
+  z-index: 10;
 
-.modal input,
-.modal textarea {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-  background: #334155;
-  color: white;
+  max-width: 500px;
+  background: #141414;
+  border: 1px solid rgba(180,145,80,.2);
+  box-shadow: 0 32px 80px rgba(0,0,0,.7);
+  padding: 60px 40px;
+  text-align: center;
 }
 
-.modal textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-/* ================= BOTONES MODAL ================= */
-.modal-actions {
+.center-content {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.eyebrow {
+  font-size: .65rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #b49150;
+}
+
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.3rem;
+  color: #f0e6d0;
+  letter-spacing: .08em;
+}
+
+.subtitle {
+  color: #7a6a50;
+  font-size: .85rem;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
   gap: 10px;
-  margin-top: 10px;
 }
 
-/* ================= SCROLL MODAL ================= */
-.modal::-webkit-scrollbar {
-  width: 6px;
+.divider span:not(.diamond) {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #b49150);
 }
 
-.modal::-webkit-scrollbar-thumb {
-  background: #475569;
-  border-radius: 10px;
+.divider span:last-child {
+  background: linear-gradient(90deg, #b49150, transparent);
 }
 
-.pendiente {
-  background: #f59e0b;
-  color: black;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-weight: bold;
-}
+.diamond { font-size: .4rem; color: #b49150; }
 
-.aprobado {
-  background: #22c55e;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-weight: bold;
-}
-
-/* ================= SELECT ESTADO ================= */
-
-
-.estado-btn {
-  background: #4d4e50;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  color: rgb(0, 0, 0);
-  font-weight: bold;
+.btn-primary {
+  margin-top: 20px;
+  padding: 14px 40px;
+  border: 1px solid #b49150;
+  background: transparent;
+  color: #b49150;
+  letter-spacing: .3em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all .3s;
 }
 
-.estado-btn.aprobado {
-  background-color: #28a745; /* verde */
+.btn-primary:hover {
+  background: #b49150;
+  color: #0d0d0d;
 }
-
-.estado-btn.rechazado {
-  background-color: #dc3545; /* rojo */
-}
-
-.estado-btn.pendiente {
-  background-color: #868e96; /* gris más claro */
-}
-
-.estado-btn:hover {
-  opacity: 0.85;
-}
-
 </style>

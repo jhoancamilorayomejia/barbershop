@@ -1,5 +1,6 @@
 package controllers
 
+/*
 import (
 	"encoding/json"
 	"net/http"
@@ -64,3 +65,4 @@ func GetSuppliers2(c *gin.Context) {
 
 	c.JSON(http.StatusOK, suppliers)
 }
+*/

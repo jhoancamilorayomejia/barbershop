@@ -1,5 +1,6 @@
 package controllers
 
+/*
 import (
 	"encoding/json"
 	"net/http"
@@ -79,7 +80,7 @@ func CreateSupplier(c *gin.Context) {
 	supplier.Estado = "Pendiente de Validación"
 
 	query := `
-		INSERT INTO supplier 
+		INSERT INTO supplier
 		(nit, nombre, apellido, cedula, tipo_proveedor, tipo_persona, beneficiarios, datos_bancarios, estado)
 		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
 		RETURNING id
@@ -174,3 +175,4 @@ func DeleteSupplier(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Proveedor eliminado"})
 }
+*/

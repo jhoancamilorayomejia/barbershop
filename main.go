@@ -1,9 +1,48 @@
 package main
 
 import (
-	"barbershop/db"
 	"log"
+	"net/http"
+	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/jhoancamilorayomejia/barbershop/controllers"
+	"github.com/jhoancamilorayomejia/barbershop/db"
 )
+
+// Middleware JWT (MEJORADO)
+func AuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authHeader := c.GetHeader("Authorization")
+
+		// ❌ No hay token
+		if authHeader == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token requerido"})
+			c.Abort()
+			return
+		}
+
+		// ❌ Formato incorrecto
+		if !strings.HasPrefix(authHeader, "Bearer ") {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Formato inválido. Use Bearer <token>"})
+			c.Abort()
+			return
+		}
+
+		// ✅ Extraer token correctamente
+		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
+
+		// 🔎 Validar token
+		token, err := controllers.ValidateToken(tokenStr)
+		if err != nil || !token.Valid {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido o expirado"})
+			c.Abort()
+			return
+		}
+
+		c.Next()
+	}
+}
 
 func main() {
 	_, err := db.ConnectDB()
@@ -11,7 +50,37 @@ func main() {
 		log.Fatal("❌ Error conectando a la DB:", err)
 	}
 
-	log.Println("🚀 Servidor iniciado")
+	// Crear router
+	r := gin.Default()
+
+	// CORS (permite conexión con Vue)
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	})
+
+	// ✅ Ruta correcta
+	r.POST("/api/reservations", controllers.CreateReservation)
+
+	// ✅ Ruta de login
+	r.POST("/api/login", controllers.Login)
+
+	//ruta para admin
+	r.GET("/api/proyectos", AuthMiddleware(), controllers.GetReservation)
+
+	log.Println("🚀 Servidor corriendo en http://localhost:8080")
+
+	// Levantar servidor
+	if err := r.Run(":8080"); err != nil {
+		log.Fatal("❌ Error iniciando servidor:", err)
+	}
 }
 
 /*package main
