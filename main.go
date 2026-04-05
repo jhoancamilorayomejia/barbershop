@@ -76,13 +76,9 @@ func main() {
 	r.Static("/assets", "./dist/assets")
 	r.StaticFile("/favicon.ico", "./dist/favicon.ico")
 
-	// Cualquier ruta que no sea /api/* la maneja Vue Router
+	// Todo lo que no sea una ruta real del backend → index.html (Vue Router)
 	r.NoRoute(func(c *gin.Context) {
-		if !strings.HasPrefix(c.Request.URL.Path, "/api") {
-			c.File("./dist/index.html")
-			return
-		}
-		c.JSON(http.StatusNotFound, gin.H{"error": "Ruta no encontrada"})
+		c.File("./dist/index.html")
 	})
 
 	// ✅ Puerto dinámico — Railway asigna el puerto via variable PORT
