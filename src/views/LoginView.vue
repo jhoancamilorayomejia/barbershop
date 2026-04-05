@@ -174,9 +174,8 @@ const scrollToForm = () => {
       <div class="hero-inner">
         <span class="eyebrow">Barbería &amp; Estilo</span>
         <h1 class="hero-title">
-          Donde cada<br>
-          <em>corte</em> cuenta<br>
-          una historia.
+          Barber Charly<br>
+          <em>Tu estilo empieza donde termina lo común</em>
         </h1>
         <p class="hero-sub">Tu estilo, nuestra pasión. Agendá tu turno en segundos.</p>
         <div class="hero-actions">
