@@ -18,10 +18,10 @@ const loading  = ref(false)
 const mostrarLogin = ref(false)
 
 // Login
-const loginEmail = ref('')
+const loginEmail    = ref('')
 const loginPassword = ref('')
-const loginError = ref('')
-const loginLoading = ref(false)
+const loginError    = ref('')
+const loginLoading  = ref(false)
 
 const loginAdmin = async () => {
   loginLoading.value = true
@@ -33,7 +33,8 @@ const loginAdmin = async () => {
       password: loginPassword.value
     }
 
-    const res = await fetch('http://localhost:8080/api/login', {
+    // ✅ Ruta relativa — funciona en desarrollo y producción
+    const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -52,11 +53,11 @@ const loginAdmin = async () => {
 
     mostrarLogin.value = false
 
-    // ✅ REDIRECCIÓN POR ROL
+    // ✅ Redirección por rol
     if (data.rol === 'admin') {
       router.push('/api/proyectos')
     } else if (data.rol === 'proveedor') {
-      router.push('/api/proyectos') // 👈 lo dejas así
+      router.push('/api/proyectos')
     } else {
       router.push('/api/login')
     }
@@ -75,7 +76,6 @@ const formValido = computed(() => {
 
 // ✅ Formatear WhatsApp y limitar a 10 dígitos
 const formatearWhatsApp = (value) => {
-  // Solo números y máximo 10 dígitos
   const numeros = value.replace(/\D/g, '').slice(0, 10)
   const partes = []
   if (numeros.length > 0) partes.push(numeros.slice(0, 3))
@@ -84,7 +84,6 @@ const formatearWhatsApp = (value) => {
   return partes.join(' ')
 }
 
-// Observa cambios en el input
 watch(whatsapp, (newVal) => {
   const formateado = formatearWhatsApp(newVal)
   if (formateado !== newVal) {
@@ -92,7 +91,7 @@ watch(whatsapp, (newVal) => {
   }
 })
 
-// ✅ Fechas
+// ✅ Fechas disponibles (próximos 30 días excepto domingos)
 const fechasDisponibles = computed(() => {
   const dias = []
   const cursor = new Date()
@@ -113,25 +112,21 @@ const formatearFecha = (d) =>
     month: 'long'
   }).replace(/^\w/, c => c.toUpperCase())
 
-// ✅ Horas
+// ✅ Horas disponibles
 const horasDisponibles = computed(() => {
   const horas = []
-
   for (let h = 6; h <= 20; h++) {
     for (let m of [0, 30]) {
       if (h === 20 && m === 30) continue
-
       const hh = String(h).padStart(2, '0')
       const mm = String(m).padStart(2, '0')
-
       horas.push(`${hh}:${mm}`)
     }
   }
-
   return horas
 })
 
-// ✅ Reset hora si cambia fecha
+// Reset hora si cambia fecha
 watch(fecha, () => {
   hora.value = ''
 })
@@ -188,20 +183,20 @@ const confirmarReserva = async () => {
 
     const token = localStorage.getItem('token')
 
-const res = await fetch('http://localhost:8080/api/reservations', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}` // 🔐 AQUI
-  },
-  body: JSON.stringify(payload)
-})
+    const res = await fetch('/api/reservations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    })
 
-if (res.status === 401) {
-  localStorage.removeItem('token')
-  router.push('/api/login')
-  return
-}
+    if (res.status === 401) {
+      localStorage.removeItem('token')
+      router.push('/api/login')
+      return
+    }
 
     const text = await res.text()
 
@@ -216,15 +211,14 @@ if (res.status === 401) {
       throw new Error(data.error || 'Error desconocido')
     }
 
-    // ✅ AQUÍ ES DONDE VA
     generarPDF()
 
     mostrarModal.value = false
     enviado.value = true
 
     setTimeout(() => {
-  router.push('/api/proyectos')
-}, 2000)
+      router.push('/api/proyectos')
+    }, 2000)
 
   } catch (error) {
     errorMsg.value = error.message
@@ -232,8 +226,6 @@ if (res.status === 401) {
     loading.value = false
   }
 }
-
-
 
 // ✅ Reset
 const nuevaReserva = () => {
@@ -282,12 +274,12 @@ const nuevaReserva = () => {
           <div class="field">
             <label>WhatsApp <span class="req">*</span></label>
             <input
-            v-model="whatsapp"
-            type="tel"
-            required
-            placeholder="323 517 9341"
-            maxlength="12"
-              />
+              v-model="whatsapp"
+              type="tel"
+              required
+              placeholder="323 517 9341"
+              maxlength="12"
+            />
             <span class="hint">Para confirmar o consultar tu turno</span>
           </div>
 
@@ -305,23 +297,22 @@ const nuevaReserva = () => {
             </select>
           </div>
 
-        <!-- SOLO aparece si hay fecha -->
-<div v-if="fecha" class="field">
-  <label>Horario <span class="req">*</span></label>
-
-  <div class="horas-grid">
-    <button
-      v-for="h in horasDisponibles"
-      :key="h"
-      type="button"
-      class="hora-btn"
-      :class="{ active: hora === h }"
-      @click="hora = h"
-    >
-      {{ h }}
-    </button>
-  </div>
-</div>
+          <!-- Solo aparece si hay fecha -->
+          <div v-if="fecha" class="field">
+            <label>Horario <span class="req">*</span></label>
+            <div class="horas-grid">
+              <button
+                v-for="h in horasDisponibles"
+                :key="h"
+                type="button"
+                class="hora-btn"
+                :class="{ active: hora === h }"
+                @click="hora = h"
+              >
+                {{ h }}
+              </button>
+            </div>
+          </div>
 
           <div class="field">
             <label>Notas adicionales</label>
@@ -332,57 +323,56 @@ const nuevaReserva = () => {
             <span>Confirmar Turno</span>
           </button>
 
-        <!-- ── Enlace para iniciar sesión ── -->
-        <div class="login-link">
-        <a href="#" @click.prevent="mostrarLogin = true">¿Eres Administrador? Iniciar sesión</a>
-        </div>
-          
+          <!-- Enlace para iniciar sesión -->
+          <div class="login-link">
+            <a href="#" @click.prevent="mostrarLogin = true">¿Eres Administrador? Iniciar sesión</a>
+          </div>
 
         </form>
       </transition>
     </div>
-    <!-- MODAL -->
-<div v-if="mostrarModal" class="modal-overlay">
-  <div class="modal">
-    <h3>Confirmar reserva</h3>
-    <p>¿Deseas confirmar tu turno?</p>
 
-    <div class="modal-actions">
-      <button class="btn-outline" @click="mostrarModal = false">
-        Cancelar
-      </button>
-      <button class="btn-primary" @click="confirmarReserva" :disabled="loading">
-  <span>{{ loading ? 'Guardando...' : 'Confirmar' }}</span>
-</button>
-    </div>
-    <p v-if="errorMsg" style="color:#c0392b; font-size:.75rem; text-align:center;">
+    <!-- Modal confirmación reserva -->
+    <div v-if="mostrarModal" class="modal-overlay">
+      <div class="modal">
+        <h3>Confirmar reserva</h3>
+        <p>¿Deseas confirmar tu turno?</p>
+        <div class="modal-actions">
+          <button class="btn-outline" @click="mostrarModal = false">Cancelar</button>
+          <button class="btn-primary" @click="confirmarReserva" :disabled="loading">
+            <span>{{ loading ? 'Guardando...' : 'Confirmar' }}</span>
+          </button>
+        </div>
+        <p v-if="errorMsg" style="color:#c0392b; font-size:.75rem; text-align:center;">
           {{ errorMsg }}
-          </p>
-  </div>
-</div>
-  <!-- ── Modal de Login  ── -->
-<div v-if="mostrarLogin" class="modal-overlay">
-  <div class="modal">
-    <h3>Iniciar sesión</h3>
-    <div class="field">
-  <label>Correo electrónico</label>
-  <input type="text" v-model="loginEmail" placeholder="ejemplo@mail.com" />
-</div>
-<div class="field">
-  <label>Contraseña</label>
-  <input type="password" v-model="loginPassword" placeholder="********" />
-</div>
-<div class="modal-actions">
-  <button class="btn-outline" @click="mostrarLogin = false">Cancelar</button>
-  <button class="btn-primary" @click="loginAdmin" :disabled="loginLoading">
-    <span>{{ loginLoading ? 'Ingresando...' : 'Ingresar' }}</span>
-  </button>
-</div>
-<p v-if="loginError" style="color:#c0392b; font-size:.75rem; text-align:center;">
-  {{ loginError }}
-</p>
-  </div>
-</div>
+        </p>
+      </div>
+    </div>
+
+    <!-- Modal de Login -->
+    <div v-if="mostrarLogin" class="modal-overlay">
+      <div class="modal">
+        <h3>Iniciar sesión</h3>
+        <div class="field">
+          <label>Usuario</label>
+          <input type="text" v-model="loginEmail" placeholder="Tu usuario" />
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" v-model="loginPassword" placeholder="********" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-outline" @click="mostrarLogin = false">Cancelar</button>
+          <button class="btn-primary" @click="loginAdmin" :disabled="loginLoading">
+            <span>{{ loginLoading ? 'Ingresando...' : 'Ingresar' }}</span>
+          </button>
+        </div>
+        <p v-if="loginError" style="color:#c0392b; font-size:.75rem; text-align:center;">
+          {{ loginError }}
+        </p>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -568,6 +558,7 @@ const nuevaReserva = () => {
   .card-header h1 { font-size: 2rem; }
 }
 
+/* ── Modal ── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -600,12 +591,18 @@ const nuevaReserva = () => {
   font-size: .8rem;
 }
 
+.modal .field {
+  text-align: left;
+  margin-bottom: 14px;
+}
+
 .modal-actions {
   display: flex;
   gap: 10px;
   justify-content: center;
 }
 
+/* ── Horas ── */
 .horas-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -620,6 +617,7 @@ const nuevaReserva = () => {
   font-size: .8rem;
   cursor: pointer;
   transition: all .25s;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .hora-btn:hover {
@@ -632,6 +630,8 @@ const nuevaReserva = () => {
   color: #0d0d0d;
   border-color: #b49150;
 }
+
+/* ── Login link ── */
 .login-link {
   text-align: center;
   margin-top: 12px;
