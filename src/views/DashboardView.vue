@@ -34,7 +34,7 @@
 <script setup>
 const volver = () => {
   console.log('click funcionando')
-  window.location.href = 'http://localhost:3000/api/login'
+  window.location.href = '/api/login'
 }
 </script>
 
