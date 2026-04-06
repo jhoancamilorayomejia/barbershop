@@ -360,7 +360,7 @@ input, select, textarea {
   min-height: 55vh;
   display: flex; align-items: center; justify-content: center;
   text-align: center;
-  padding: 60px 24px 50px;
+  padding: 30px 24px 20px;
   border-bottom: 1px solid rgba(180,145,80,.1);
 }
 
