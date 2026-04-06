@@ -69,6 +69,7 @@
                     <th>WhatsApp</th>
                     <th>Hora</th>
                     <th>Nota</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -77,6 +78,12 @@
                     <td>{{ r.phone }}</td>
                     <td>{{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}</td>
                     <td>{{ r.note || '—' }}</td>
+                    <!-- 🔴 BOTÓN ELIMINAR -->
+                    <td>
+                    <button class="btn-delete" @click="abrirEliminar(r)">
+                    Eliminar
+                    </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -95,7 +102,26 @@
             <span>Cerrar sesión</span>
           </button>
         </div>
+        <!-- 🔴 MODAL ELIMINAR -->
+<div v-if="mostrarEliminar" class="modal-overlay">
+  <div class="modal">
+    <h3>Eliminar reserva</h3>
+    <p>
+      ¿Seguro que deseas eliminar la reserva de 
+      <strong>{{ reservaAEliminar?.name }}</strong>?
+    </p>
 
+    <div class="modal-actions">
+      <button class="btn-outline" @click="mostrarEliminar = false">
+        Cancelar
+      </button>
+
+      <button class="btn-delete" @click="eliminarReserva" :disabled="eliminando">
+        {{ eliminando ? 'Eliminando...' : 'Eliminar' }}
+      </button>
+    </div>
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -107,6 +133,9 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const reservas = ref([])
+const mostrarEliminar = ref(false)
+const reservaAEliminar = ref(null)
+const eliminando = ref(false)
 
 // Estado del calendario
 const viewDate = ref(new Date())
@@ -250,6 +279,43 @@ const obtenerReservas = async () => {
     reservas.value = await res.json()
   } catch (error) {
     console.error('Error cargando reservas:', error)
+  }
+}
+
+const abrirEliminar = (reserva) => {
+  reservaAEliminar.value = reserva
+  mostrarEliminar.value = true
+}
+
+const eliminarReserva = async () => {
+  if (!reservaAEliminar.value) return
+
+  eliminando.value = true
+
+  try {
+    const token = localStorage.getItem('token')
+
+    const res = await fetch(`/api/reservations/${reservaAEliminar.value.id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) throw new Error(data.error)
+
+    // 🔄 Recargar reservas
+    await obtenerReservas()
+
+    mostrarEliminar.value = false
+    reservaAEliminar.value = null
+
+  } catch (err) {
+    alert(err.message)
+  } finally {
+    eliminando.value = false
   }
 }
 
@@ -531,5 +597,56 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
 .fade-slide-enter-from {
   opacity: 0;
   transform: translateY(8px);
+}
+
+.btn-delete {
+  padding: 8px 14px;
+  border: 1px solid #c0392b;
+  background: transparent;
+  color: #c0392b;
+  font-size: .65rem;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.btn-delete:hover {
+  background: #c0392b;
+  color: #fff;
+}
+
+/* MODAL (reutilizable) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background: #141414;
+  border: 1px solid rgba(180,145,80,.2);
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal h3 {
+  color: #f0e6d0;
+  margin-bottom: 10px;
+}
+
+.modal p {
+  color: #8a7455;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 </style>
