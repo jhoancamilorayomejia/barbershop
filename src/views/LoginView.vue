@@ -144,7 +144,7 @@ const confirmarReserva = async () => {
     generarPDF()
     mostrarModal.value = false
     enviado.value = true
-    setTimeout(() => router.push('/api/dashboard'), 2000)
+    setTimeout(() => router.push('/dashboard'), 2000)
   } catch (error) {
     errorMsg.value = error.message
   } finally {
