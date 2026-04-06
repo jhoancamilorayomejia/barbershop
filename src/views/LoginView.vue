@@ -15,6 +15,7 @@ const mostrarModal = ref(false)
 const errorMsg = ref('')
 const loading  = ref(false)
 const mostrarLogin = ref(false)
+const loadingHoras = ref(false)
 
 const loginEmail    = ref('')
 const loginPassword = ref('')
@@ -68,11 +69,12 @@ watch(whatsapp, (newVal) => {
 })
 
 const obtenerReservas = async (fechaSeleccionada) => {
+  loadingHoras.value = true
+
   try {
     const res = await fetch(`/api/reservations?date=${fechaSeleccionada}`)
     const data = await res.json()
 
-    // Extrae solo la hora "HH:MM"
     reservasDelDia.value = data.map(r => {
       return r.reservation_date.split(' ')[1].slice(0,5)
     })
@@ -80,6 +82,8 @@ const obtenerReservas = async (fechaSeleccionada) => {
   } catch (error) {
     console.error('Error cargando reservas', error)
     reservasDelDia.value = []
+  } finally {
+    loadingHoras.value = false
   }
 }
 
@@ -259,7 +263,7 @@ const scrollToForm = () => {
             </select>
           </div>
 
-          <div v-if="fecha" class="field">
+          <div v-if="fecha && !loadingHoras" class="field">
             <label>Horario <span class="req">*</span></label>
             <div class="horas-grid">
               <button
@@ -674,4 +678,5 @@ input, select, textarea {
   .btn-hero, .btn-ghost { width: auto; min-width: 240px; }
   .horas-grid { grid-template-columns: repeat(5, 1fr); }
 }
+
 </style>
