@@ -20,6 +20,7 @@ const loginEmail    = ref('')
 const loginPassword = ref('')
 const loginError    = ref('')
 const loginLoading  = ref(false)
+const reservasDelDia = ref([])
 
 const loginAdmin = async () => {
   loginLoading.value = true
@@ -66,6 +67,22 @@ watch(whatsapp, (newVal) => {
   if (formateado !== newVal) whatsapp.value = formateado
 })
 
+const obtenerReservas = async (fechaSeleccionada) => {
+  try {
+    const res = await fetch(`/api/reservations?date=${fechaSeleccionada}`)
+    const data = await res.json()
+
+    // Extrae solo la hora "HH:MM"
+    reservasDelDia.value = data.map(r => {
+      return r.reservation_date.split(' ')[1].slice(0,5)
+    })
+
+  } catch (error) {
+    console.error('Error cargando reservas', error)
+    reservasDelDia.value = []
+  }
+}
+
 const fechasDisponibles = computed(() => {
   const dias = []
   const cursor = new Date()
@@ -89,14 +106,26 @@ const horasDisponibles = computed(() => {
   for (let h = 6; h <= 20; h++) {
     for (let m = 0; m < 60; m += DURACION_MINUTOS) {
       if (h === 20 && m > 0) continue
-      horas.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`)
+
+      const horaFormateada = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`
+
+      // ❌ Si ya está reservada → NO se muestra
+      if (!reservasDelDia.value.includes(horaFormateada)) {
+        horas.push(horaFormateada)
+      }
     }
   }
 
   return horas
 })
 
-watch(fecha, () => { hora.value = '' })
+watch(fecha, (nuevaFecha) => {
+  hora.value = ''
+
+  if (nuevaFecha) {
+    obtenerReservas(nuevaFecha)
+  }
+})
 
 const generarPDF = () => {
   const doc = new jsPDF()
