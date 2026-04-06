@@ -81,14 +81,18 @@ const formatearFecha = (d) =>
   d.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })
     .replace(/^\w/, c => c.toUpperCase())
 
+const DURACION_MINUTOS = 60
+
 const horasDisponibles = computed(() => {
   const horas = []
+
   for (let h = 6; h <= 20; h++) {
-    for (let m of [0, 30]) {
-      if (h === 20 && m === 30) continue
+    for (let m = 0; m < 60; m += DURACION_MINUTOS) {
+      if (h === 20 && m > 0) continue
       horas.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`)
     }
   }
+
   return horas
 })
 
