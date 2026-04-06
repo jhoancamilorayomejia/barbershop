@@ -15,13 +15,11 @@ const mostrarModal = ref(false)
 const errorMsg = ref('')
 const loading  = ref(false)
 const mostrarLogin = ref(false)
-const loadingHoras = ref(false)
 
 const loginEmail    = ref('')
 const loginPassword = ref('')
 const loginError    = ref('')
 const loginLoading  = ref(false)
-const reservasDelDia = ref([])
 
 const loginAdmin = async () => {
   loginLoading.value = true
@@ -68,25 +66,6 @@ watch(whatsapp, (newVal) => {
   if (formateado !== newVal) whatsapp.value = formateado
 })
 
-const obtenerReservas = async (fechaSeleccionada) => {
-  loadingHoras.value = true
-
-  try {
-    const res = await fetch(`/api/reservations?date=${fechaSeleccionada}`)
-    const data = await res.json()
-
-    reservasDelDia.value = data.map(r => {
-      return r.reservation_date.split(' ')[1].slice(0,5)
-    })
-
-  } catch (error) {
-    console.error('Error cargando reservas', error)
-    reservasDelDia.value = []
-  } finally {
-    loadingHoras.value = false
-  }
-}
-
 const fechasDisponibles = computed(() => {
   const dias = []
   const cursor = new Date()
@@ -110,26 +89,14 @@ const horasDisponibles = computed(() => {
   for (let h = 6; h <= 20; h++) {
     for (let m = 0; m < 60; m += DURACION_MINUTOS) {
       if (h === 20 && m > 0) continue
-
-      const horaFormateada = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`
-
-      // ❌ Si ya está reservada → NO se muestra
-      if (!reservasDelDia.value.includes(horaFormateada)) {
-        horas.push(horaFormateada)
-      }
+      horas.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`)
     }
   }
 
   return horas
 })
 
-watch(fecha, (nuevaFecha) => {
-  hora.value = ''
-
-  if (nuevaFecha) {
-    obtenerReservas(nuevaFecha)
-  }
-})
+watch(fecha, () => { hora.value = '' })
 
 const generarPDF = () => {
   const doc = new jsPDF()
@@ -263,7 +230,7 @@ const scrollToForm = () => {
             </select>
           </div>
 
-          <div v-if="fecha && !loadingHoras" class="field">
+          <div v-if="fecha" class="field">
             <label>Horario <span class="req">*</span></label>
             <div class="horas-grid">
               <button
@@ -678,5 +645,4 @@ input, select, textarea {
   .btn-hero, .btn-ghost { width: auto; min-width: 240px; }
   .horas-grid { grid-template-columns: repeat(5, 1fr); }
 }
-
 </style>
