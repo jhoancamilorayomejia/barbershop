@@ -175,7 +175,7 @@ const scrollToForm = () => {
         <span class="eyebrow">Barbería &amp; Estilo</span>
         <h1 class="hero-title">
           Barber Charly<br>
-          <em>Tu estilo empieza donde termina lo común</em>
+          <em>Tu estilo empieza<br>donde termina lo común</em>
         </h1>
         <p class="hero-sub">Tu estilo, nuestra pasión. Agendá tu turno en segundos.</p>
         <div class="hero-actions">
@@ -208,16 +208,16 @@ const scrollToForm = () => {
         </div>
 
         <form v-else key="form" class="form" @submit.prevent="enviar">
-          <div class="form-row">
-            <div class="field">
-              <label>Nombre completo <span class="req">*</span></label>
-              <input v-model="nombre" type="text" required placeholder="Ej: Jhoan Camilo..." />
-            </div>
-            <div class="field">
-              <label>WhatsApp <span class="req">*</span></label>
-              <input v-model="whatsapp" type="tel" required placeholder="323 517 9341" maxlength="12" />
-              <span class="hint">Para confirmar o consultar tu turno</span>
-            </div>
+
+          <div class="field">
+            <label>Nombre completo <span class="req">*</span></label>
+            <input v-model="nombre" type="text" required placeholder="Ej: Jhoan Camilo..." />
+          </div>
+
+          <div class="field">
+            <label>WhatsApp <span class="req">*</span></label>
+            <input v-model="whatsapp" type="tel" required placeholder="323 517 9341" maxlength="12" />
+            <span class="hint">Para confirmar o consultar tu turno</span>
           </div>
 
           <div class="field">
@@ -248,7 +248,7 @@ const scrollToForm = () => {
 
           <div class="field">
             <label>Notas adicionales</label>
-            <textarea v-model="notas" rows="3" placeholder="Alguna preferencia o consulta especial..."></textarea>
+            <textarea v-model="notas" rows="4" placeholder="Alguna preferencia o consulta especial..."></textarea>
           </div>
 
           <button type="submit" class="btn-primary">
@@ -260,8 +260,8 @@ const scrollToForm = () => {
 
     <!-- ── FOOTER ── -->
     <footer class="footer">
-      <div class="divider" style="margin-bottom:20px"><span></span><span class="diamond">◆</span><span></span></div>
-      <p class="footer-text">© 2026 Barbershop · Todos los derechos reservados.</p>
+      <div class="divider" style="margin-bottom:24px"><span></span><span class="diamond">◆</span><span></span></div>
+      <p class="footer-text">© 2026 Barber Charly · Todos los derechos reservados.</p>
     </footer>
 
     <!-- MODAL CONFIRMACIÓN -->
@@ -271,7 +271,7 @@ const scrollToForm = () => {
         <p>¿Deseas confirmar tu turno?</p>
         <div class="modal-actions">
           <button class="btn-outline" @click="mostrarModal = false">Cancelar</button>
-          <button class="btn-primary" @click="confirmarReserva" :disabled="loading">
+          <button class="btn-primary modal-btn" @click="confirmarReserva" :disabled="loading">
             <span>{{ loading ? 'Guardando...' : 'Confirmar' }}</span>
           </button>
         </div>
@@ -293,7 +293,7 @@ const scrollToForm = () => {
         </div>
         <div class="modal-actions">
           <button class="btn-outline" @click="mostrarLogin = false">Cancelar</button>
-          <button class="btn-primary" @click="loginAdmin" :disabled="loginLoading">
+          <button class="btn-primary modal-btn" @click="loginAdmin" :disabled="loginLoading">
             <span>{{ loginLoading ? 'Ingresando...' : 'Ingresar' }}</span>
           </button>
         </div>
@@ -308,6 +308,7 @@ const scrollToForm = () => {
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── BASE ── */
 .page {
   min-height: 100vh;
   background: #0d0d0d;
@@ -336,174 +337,194 @@ const scrollToForm = () => {
 .glow.left  { background: radial-gradient(circle, rgba(180,145,80,.12), transparent 70%); top: -150px; left: -200px; }
 .glow.right { background: radial-gradient(circle, rgba(180,145,80,.08), transparent 70%); bottom: -150px; right: -200px; }
 
-/* HERO */
+/* ── HERO ── */
 .hero {
   position: relative; z-index: 1;
   min-height: 100vh;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   text-align: center;
-  padding: 80px 24px 80px;
+  padding: 100px 28px 100px;
   border-bottom: 1px solid rgba(180,145,80,.1);
 }
 
-.hero-inner { max-width: 720px; }
+.hero-inner { max-width: 800px; width: 100%; }
 
 .eyebrow {
   display: inline-block;
-  font-size: .62rem; letter-spacing: .4em;
-  text-transform: uppercase; color: #b49150;
-  margin-bottom: 28px;
+  font-size: .85rem;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: #b49150;
+  margin-bottom: 32px;
 }
 
 .hero-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(3rem, 9vw, 7rem);
-  font-weight: 600; line-height: 1.05;
-  letter-spacing: .03em; color: #f0e6d0;
-  margin-bottom: 28px;
+  font-size: clamp(3.6rem, 11vw, 8rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: .02em;
+  color: #f0e6d0;
+  margin-bottom: 32px;
 }
-.hero-title em { font-style: italic; color: #b49150; }
+.hero-title em { font-style: italic; color: #b49150; font-size: .85em; }
 
 .hero-sub {
-  font-size: .88rem; font-weight: 300;
-  color: #6a5c44; letter-spacing: .06em;
-  margin-bottom: 52px;
+  font-size: 1.05rem;
+  font-weight: 300;
+  color: #6a5c44;
+  letter-spacing: .05em;
+  margin-bottom: 56px;
 }
 
-.hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 
 .btn-hero {
-  padding: 16px 48px;
+  padding: 20px 52px;
   background: #b49150; color: #0d0d0d;
   border: none;
   font-family: 'Montserrat', sans-serif;
-  font-size: .72rem; font-weight: 600;
-  letter-spacing: .3em; text-transform: uppercase;
+  font-size: .92rem; font-weight: 600;
+  letter-spacing: .25em; text-transform: uppercase;
   cursor: pointer; transition: all .3s;
+  min-width: 220px;
 }
 .btn-hero:hover { background: #c9a862; transform: translateY(-2px); }
 
 .btn-ghost {
-  padding: 16px 48px;
+  padding: 20px 52px;
   background: transparent; color: #b49150;
-  border: 1px solid rgba(180,145,80,.35);
+  border: 1px solid rgba(180,145,80,.4);
   font-family: 'Montserrat', sans-serif;
-  font-size: .72rem; font-weight: 500;
-  letter-spacing: .3em; text-transform: uppercase;
+  font-size: .92rem; font-weight: 500;
+  letter-spacing: .25em; text-transform: uppercase;
   cursor: pointer; transition: all .3s;
+  min-width: 220px;
 }
-.btn-ghost:hover { border-color: #b49150; background: rgba(180,145,80,.06); }
+.btn-ghost:hover { border-color: #b49150; background: rgba(180,145,80,.07); }
 
 .hero-deco {
   position: absolute; bottom: 40px;
   display: flex; align-items: center; gap: 16px;
 }
 .deco-line { width: 80px; height: 1px; background: rgba(180,145,80,.25); }
-.deco-sym { font-size: .5rem; color: #b49150; }
+.deco-sym { font-size: .55rem; color: #b49150; }
 
-/* SECCIÓN FORM */
+/* ── SECCIÓN FORM ── */
 .section-form {
   position: relative; z-index: 1;
-  max-width: 800px; margin: 0 auto;
-  padding: 100px 28px 80px;
+  max-width: 860px; margin: 0 auto;
+  padding: 110px 32px 90px;
 }
 
-.section-header { text-align: center; margin-bottom: 64px; }
+.section-header { text-align: center; margin-bottom: 70px; }
 
 .section-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.2rem, 6vw, 3.8rem);
+  font-size: clamp(2.6rem, 7vw, 4.5rem);
   font-weight: 600; color: #f0e6d0;
-  letter-spacing: .06em; margin: 12px 0 16px;
+  letter-spacing: .06em; margin: 16px 0 20px;
 }
 
 .section-sub {
-  font-size: .8rem; font-weight: 300;
-  color: #6a5c44; letter-spacing: .04em; margin-bottom: 28px;
+  font-size: .95rem; font-weight: 300;
+  color: #6a5c44; letter-spacing: .04em; margin-bottom: 32px;
 }
 
 .divider {
   display: flex; align-items: center;
-  justify-content: center; gap: 12px;
+  justify-content: center; gap: 14px;
 }
 .divider span:not(.diamond) {
-  width: 70px; height: 1px;
+  width: 80px; height: 1px;
   background: linear-gradient(90deg, transparent, #b49150);
 }
 .divider span:last-child { background: linear-gradient(90deg, #b49150, transparent); }
-.diamond { font-size: .4rem; color: #b49150; }
+.diamond { font-size: .45rem; color: #b49150; }
 
-/* FORM */
-.form { display: flex; flex-direction: column; gap: 28px; }
+/* ── FORM ── */
+.form { display: flex; flex-direction: column; gap: 32px; }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-.field { display: flex; flex-direction: column; gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 12px; }
 
 .field label {
-  font-size: .62rem; letter-spacing: .22em;
-  text-transform: uppercase; color: #8a7455; font-weight: 500;
+  font-size: .8rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #8a7455; font-weight: 500;
 }
 .req { color: #b49150; }
-.hint { font-size: .62rem; color: #4a3f30; letter-spacing: .03em; }
+.hint { font-size: .78rem; color: #4a3f30; letter-spacing: .03em; }
 
 .field input,
 .field select,
 .field textarea {
   background: #141414;
-  border: 1px solid rgba(180,145,80,.15);
+  border: 1px solid rgba(180,145,80,.18);
   color: #e8dcc8;
   font-family: 'Montserrat', sans-serif;
-  font-size: .88rem; font-weight: 300;
-  padding: 16px 18px; outline: none;
+  font-size: 1rem;
+  font-weight: 300;
+  padding: 20px 22px;
+  outline: none;
   transition: border-color .25s, background .25s;
   resize: vertical; width: 100%;
 }
 .field input::placeholder,
-.field textarea::placeholder { color: #3a3028; }
+.field textarea::placeholder { color: #3a3028; font-size: 1rem; }
 .field input:focus,
 .field select:focus,
 .field textarea:focus { border-color: #b49150; background: #181510; }
 
 .field select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b49150' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23b49150' stroke-width='1.8' fill='none'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 18px center;
+  background-position: right 22px center;
   background-color: #141414;
-  padding-right: 44px; cursor: pointer;
+  padding-right: 50px; cursor: pointer;
+  font-size: 1rem;
 }
-.field select option { background: #141414; color: #e8dcc8; }
+.field select option { background: #141414; color: #e8dcc8; font-size: 1rem; }
 
+/* ── HORAS ── */
 .horas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 12px;
 }
 
 .hora-btn {
   background: #141414;
-  border: 1px solid rgba(180,145,80,.15);
-  color: #8a7455; padding: 14px 8px;
-  font-size: .78rem; cursor: pointer;
+  border: 1px solid rgba(180,145,80,.18);
+  color: #8a7455;
+  padding: 18px 8px;
+  font-size: .9rem;
+  cursor: pointer;
   transition: all .2s;
-  font-family: 'Montserrat', sans-serif; font-weight: 400;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
 }
-.hora-btn:hover { border-color: rgba(180,145,80,.5); color: #f0e6d0; }
-.hora-btn.active { background: #b49150; color: #0d0d0d; border-color: #b49150; font-weight: 600; }
+.hora-btn:hover { border-color: rgba(180,145,80,.6); color: #f0e6d0; }
+.hora-btn.active {
+  background: #b49150; color: #0d0d0d;
+  border-color: #b49150; font-weight: 600;
+}
 
+/* ── BOTONES PRINCIPALES ── */
 .btn-primary {
-  width: 100%; padding: 18px;
+  width: 100%; padding: 22px;
   background: transparent; border: 1px solid #b49150;
   color: #b49150;
   font-family: 'Montserrat', sans-serif;
-  font-size: .72rem; font-weight: 600;
-  letter-spacing: .35em; text-transform: uppercase;
+  font-size: .88rem; font-weight: 600;
+  letter-spacing: .32em; text-transform: uppercase;
   cursor: pointer; display: flex;
   align-items: center; justify-content: center;
   position: relative; overflow: hidden;
@@ -519,74 +540,103 @@ const scrollToForm = () => {
 .btn-primary:hover { color: #0d0d0d; }
 .btn-primary span { position: relative; z-index: 1; }
 
+/* En modales el btn-primary no ocupa todo el ancho */
+.modal-btn { width: auto; min-width: 160px; padding: 18px 32px; }
+
 .btn-outline {
-  padding: 14px 32px; background: transparent;
-  border: 1px solid rgba(180,145,80,.25); color: #8a7455;
+  padding: 18px 36px;
+  background: transparent;
+  border: 1px solid rgba(180,145,80,.3); color: #8a7455;
   font-family: 'Montserrat', sans-serif;
-  font-size: .68rem; font-weight: 500;
+  font-size: .82rem; font-weight: 500;
   letter-spacing: .2em; text-transform: uppercase;
   cursor: pointer; transition: border-color .2s, color .2s;
 }
 .btn-outline:hover { border-color: #b49150; color: #b49150; }
 
+/* ── ÉXITO ── */
 .success-panel {
   display: flex; flex-direction: column;
   align-items: center; text-align: center;
-  padding: 60px 0; gap: 16px;
+  padding: 70px 0; gap: 20px;
 }
-.success-icon { font-size: 3rem; color: #b49150; animation: pulse 2s ease-in-out infinite; }
+.success-icon { font-size: 3.5rem; color: #b49150; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 .success-panel h3 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2.4rem; font-weight: 600;
+  font-size: 2.8rem; font-weight: 600;
   color: #f0e6d0; letter-spacing: .06em;
 }
-.success-panel p { color: #7a6a50; font-size: .85rem; font-weight: 300; }
+.success-panel p { color: #7a6a50; font-size: 1rem; font-weight: 300; }
 
+/* ── FOOTER ── */
 .footer {
   position: relative; z-index: 1;
-  text-align: center; padding: 40px 24px;
+  text-align: center; padding: 48px 24px;
   border-top: 1px solid rgba(180,145,80,.08);
 }
 .footer-text {
-  font-size: .62rem; letter-spacing: .2em;
+  font-size: .75rem; letter-spacing: .2em;
   text-transform: uppercase; color: #3a3028;
 }
 
+/* ── MODALES ── */
 .modal-overlay {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,.82);
+  background: rgba(0,0,0,.85);
   display: flex; align-items: center; justify-content: center;
-  z-index: 1000; padding: 24px;
+  z-index: 1000; padding: 20px;
 }
 
 .modal {
   background: #141414;
-  border: 1px solid rgba(180,145,80,.2);
-  padding: 36px; width: 100%; max-width: 440px;
+  border: 1px solid rgba(180,145,80,.22);
+  padding: 44px 36px;
+  width: 100%; max-width: 500px;
   text-align: center;
   box-shadow: 0 40px 100px rgba(0,0,0,.9);
 }
 
 .modal h3 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.8rem; color: #f0e6d0;
-  letter-spacing: .06em; margin-bottom: 12px;
+  font-size: 2.2rem; color: #f0e6d0;
+  letter-spacing: .06em; margin-bottom: 14px;
 }
-.modal p { color: #8a7455; margin-bottom: 24px; font-size: .82rem; }
-.modal .field { text-align: left; margin-bottom: 16px; }
+.modal > p {
+  color: #8a7455; margin-bottom: 28px; font-size: .95rem;
+}
+.modal .field {
+  text-align: left; margin-bottom: 20px;
+}
 
-.modal-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.modal-actions {
+  display: flex; gap: 14px;
+  justify-content: center; flex-wrap: wrap;
+  margin-top: 8px;
+}
 
-.error-msg { color: #c0392b; font-size: .74rem; margin-top: 12px; margin-bottom: 0 !important; }
+.error-msg {
+  color: #c0392b; font-size: .85rem;
+  margin-top: 16px; margin-bottom: 0 !important;
+}
 
+/* ── TRANSICIÓN ── */
 .fade-enter-active, .fade-leave-active { transition: opacity .35s, transform .35s; }
 .fade-enter-from { opacity: 0; transform: translateY(-10px); }
 .fade-leave-to   { opacity: 0; transform: translateY(10px); }
 
+/* ── MÓVIL ── */
 @media (max-width: 600px) {
-  .form-row { grid-template-columns: 1fr; }
-  .horas-grid { grid-template-columns: repeat(4, 1fr); }
-  .section-form { padding: 60px 20px 60px; }
+  .hero { padding: 90px 20px 80px; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .btn-hero, .btn-ghost { width: 100%; min-width: unset; padding: 20px 24px; }
+  .section-form { padding: 70px 20px 60px; }
+  .horas-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .hora-btn { padding: 16px 6px; font-size: .85rem; }
+  .modal { padding: 36px 24px; }
+  .modal h3 { font-size: 1.9rem; }
+  .modal-actions { flex-direction: column; align-items: stretch; }
+  .modal-btn { width: 100%; }
+  .btn-outline { width: 100%; text-align: center; }
 }
 </style>
