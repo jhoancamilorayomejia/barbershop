@@ -340,11 +340,11 @@ const scrollToForm = () => {
 /* ── HERO ── */
 .hero {
   position: relative; z-index: 1;
-  min-height: 100vh;
+  min-height: 70vh;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   text-align: center;
-  padding: 100px 28px 100px;
+  padding: 40px 24px 40px;
   border-bottom: 1px solid rgba(180,145,80,.1);
 }
 
@@ -366,7 +366,7 @@ const scrollToForm = () => {
   line-height: 1.08;
   letter-spacing: .02em;
   color: #f0e6d0;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
 }
 .hero-title em { font-style: italic; color: #b49150; font-size: .85em; }
 
@@ -375,7 +375,7 @@ const scrollToForm = () => {
   font-weight: 300;
   color: #6a5c44;
   letter-spacing: .05em;
-  margin-bottom: 56px;
+  margin-bottom: 24px;
 }
 
 .hero-actions {
@@ -420,10 +420,10 @@ const scrollToForm = () => {
 .section-form {
   position: relative; z-index: 1;
   max-width: 860px; margin: 0 auto;
-  padding: 110px 32px 90px;
+  padding: 40px 24px 40px;
 }
 
-.section-header { text-align: center; margin-bottom: 70px; }
+.section-header { text-align: center; margin-bottom: 30px; }
 
 .section-title {
   font-family: 'Cormorant Garamond', serif;
@@ -449,9 +449,9 @@ const scrollToForm = () => {
 .diamond { font-size: .45rem; color: #b49150; }
 
 /* ── FORM ── */
-.form { display: flex; flex-direction: column; gap: 32px; }
+.form { display: flex; flex-direction: column; gap: 18px; }
 
-.field { display: flex; flex-direction: column; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
 
 .field label {
   font-size: .8rem;
@@ -591,7 +591,7 @@ const scrollToForm = () => {
 .modal {
   background: #141414;
   border: 1px solid rgba(180,145,80,.22);
-  padding: 44px 36px;
+  padding: 24px;
   width: 100%; max-width: 500px;
   text-align: center;
   box-shadow: 0 40px 100px rgba(0,0,0,.9);
@@ -627,10 +627,18 @@ const scrollToForm = () => {
 
 /* ── MÓVIL ── */
 @media (max-width: 600px) {
-  .hero { padding: 90px 20px 80px; }
+  .hero { padding: 30px 16px 30px; }
+  .hero {
+    min-height: auto;
+    padding: 30px 16px;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
   .hero-actions { flex-direction: column; align-items: center; }
   .btn-hero, .btn-ghost { width: 100%; min-width: unset; padding: 20px 24px; }
-  .section-form { padding: 70px 20px 60px; }
+  .section-form { margin-top: -40px; }
   .horas-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .hora-btn { padding: 16px 6px; font-size: .85rem; }
   .modal { padding: 36px 24px; }
