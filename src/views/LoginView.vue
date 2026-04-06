@@ -329,7 +329,7 @@ input, select, textarea {
 
 /* ── BASE ── */
 .page {
-  min-height: 100vh;
+  min-height: 50vh;
   background: #0d0d0d;
   font-family: 'Montserrat', sans-serif;
   position: relative;
