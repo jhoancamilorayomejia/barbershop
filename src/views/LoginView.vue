@@ -445,27 +445,22 @@ const scrollToForm = () => {
 
 /* ── SECCIÓN FORM — ancho completo en móvil ── */
 .section-form {
-  position: relative; z-index: 1;
-  /* Sin max-width en móvil → ocupa todo el ancho */
-  width: 100%;
-  padding: 48px 20px 60px;
-}
+  position: relative;
+  z-index: 1;
 
-/* Solo en desktop limitamos el ancho */
-@media (min-width: 440px) {
-  .section-form {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 30px 32px 40px;
-  }
+  width: 100%;
+  max-width: 100%;   /* 🔥 evita que se encoja */
+  margin: 0;         /* 🔥 elimina centrado */
+  
+  padding: 48px 20px 60px;
 }
 
 .section-header { text-align: center; margin-bottom: 36px; }
 
 .section-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.2rem, 8vw, 4rem);
-  font-weight: 640; color: #f0e6d0;
+  font-size: clamp(3.5rem, 12vw, 5rem);
+  font-weight: 600; color: #f0e6d0;
   letter-spacing: .06em; margin: 30px 0 34px;
 }
 
