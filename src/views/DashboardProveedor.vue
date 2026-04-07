@@ -334,7 +334,7 @@ onMounted(() => {
   background: #0d0d0d;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 0;
   font-family: 'Montserrat', sans-serif;
   position: relative;
@@ -366,7 +366,7 @@ onMounted(() => {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 100px;
+  max-width: 700px;
   background: #141414;
   border: 1px solid rgba(180,145,80,.2);
   box-shadow: 0 32px 80px rgba(0,0,0,.7);
