@@ -98,17 +98,82 @@ watch(fecha, () => { hora.value = '' })
 
 const generarPDF = () => {
   const doc = new jsPDF()
-  const fechaFormateada = new Date(`${fecha.value}T${hora.value}`).toLocaleString('es-CO')
+
+  const fechaFormateada = new Date(`${fecha.value}T${hora.value}`)
+    .toLocaleString('es-CO')
+
+  // 🎨 COLORES
+  const dorado = [180, 145, 80]
+  const negro = [13, 13, 13]
+
+  // 🧾 FONDO (opcional claro elegante)
+  doc.setFillColor(245, 240, 230)
+  doc.rect(0, 0, 210, 297, 'F')
+
+  // 🧱 HEADER
   doc.setFont('Helvetica', 'bold')
-  doc.setFontSize(16)
-  doc.text('Confirmación de Reserva', 20, 20)
+  doc.setFontSize(22)
+  doc.setTextColor(...negro)
+  doc.text('Barber Charly', 105, 25, { align: 'center' })
+
   doc.setFontSize(12)
-  doc.setFont('Helvetica', 'normal')
-  doc.text(`Nombre: ${nombre.value}`, 20, 40)
-  doc.text(`Teléfono: ${whatsapp.value}`, 20, 50)
-  doc.text(`Fecha y hora: ${fechaFormateada}`, 20, 60)
-  if (notas.value) doc.text(`Notas: ${notas.value}`, 20, 70)
-  doc.text('Gracias por tu reserva 🙌', 20, 90)
+  doc.setTextColor(120)
+  doc.text('Comprobante de Reserva', 105, 32, { align: 'center' })
+
+  // 🔶 Línea decorativa
+  doc.setDrawColor(...dorado)
+  doc.setLineWidth(1)
+  doc.line(40, 36, 170, 36)
+
+  // 📦 CAJA DE DATOS
+  doc.setDrawColor(200)
+  doc.setLineWidth(0.5)
+  doc.roundedRect(20, 50, 170, 80, 5, 5)
+
+  // 📋 CONTENIDO
+  let y = 65
+
+  doc.setFontSize(12)
+  doc.setTextColor(80)
+
+  doc.text('Nombre:', 30, y)
+  doc.setTextColor(...negro)
+  doc.text(nombre.value, 80, y)
+
+  y += 12
+  doc.setTextColor(80)
+  doc.text('Teléfono:', 30, y)
+  doc.setTextColor(...negro)
+  doc.text(whatsapp.value, 80, y)
+
+  y += 12
+  doc.setTextColor(80)
+  doc.text('Fecha y hora:', 30, y)
+  doc.setTextColor(...negro)
+  doc.text(fechaFormateada, 80, y)
+
+  if (notas.value) {
+    y += 12
+    doc.setTextColor(80)
+    doc.text('Notas:', 30, y)
+    doc.setTextColor(...negro)
+
+    const splitNotas = doc.splitTextToSize(notas.value, 90)
+    doc.text(splitNotas, 80, y)
+  }
+
+  // ✂️ MENSAJE FINAL
+  doc.setFont('Helvetica', 'italic')
+  doc.setFontSize(13)
+  doc.setTextColor(...dorado)
+  doc.text('✂ Gracias por confiar en nuestro estilo ✂', 105, 150, { align: 'center' })
+
+  // 📅 FOOTER
+  doc.setFontSize(9)
+  doc.setTextColor(140)
+  doc.text('Este documento es un comprobante de tu reserva.', 105, 280, { align: 'center' })
+
+  // 💾 GUARDAR
   doc.save(`reserva-${nombre.value}.pdf`)
 }
 
