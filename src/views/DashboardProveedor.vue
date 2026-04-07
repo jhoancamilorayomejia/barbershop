@@ -477,7 +477,7 @@ h1 {
   background: transparent;
   border: 1px solid rgba(180,145,80,.12);
   color: #666;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   padding: 8px 4px 4px;
   cursor: pointer;
   transition: all .2s;
