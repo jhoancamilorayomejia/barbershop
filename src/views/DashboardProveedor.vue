@@ -93,6 +93,65 @@
           </div>
         </transition>
 
+        <!-- 🔑 BOTÓN CAMBIAR CLAVE -->
+<div class="btn-row" style="margin-top: 0">
+  <button class="btn-outline-gold" @click="mostrarCambioPassword = true">
+    Cambiar Clave
+  </button>
+</div>
+
+<!-- 🔑 MODAL CAMBIAR CONTRASEÑA -->
+<div v-if="mostrarCambioPassword" class="modal-overlay">
+  <div class="modal">
+    <h3>Cambiar Contraseña</h3>
+
+    <div class="modal-field">
+      <label>Contraseña actual</label>
+      <input
+        v-model="passwordForm.oldPassword"
+        type="password"
+        placeholder="Ingresa tu contraseña actual"
+        class="modal-input"
+      />
+    </div>
+
+    <div class="modal-field">
+      <label>Nueva contraseña</label>
+      <input
+        v-model="passwordForm.newPassword"
+        type="password"
+        placeholder="Mínimo 6 caracteres"
+        class="modal-input"
+      />
+    </div>
+
+    <div class="modal-field">
+      <label>Confirmar nueva contraseña</label>
+      <input
+        v-model="passwordForm.confirmPassword"
+        type="password"
+        placeholder="Repite la nueva contraseña"
+        class="modal-input"
+      />
+      <span v-if="passwordMismatch" class="error-text">Las contraseñas no coinciden</span>
+    </div>
+
+    <p v-if="passwordError" class="error-text" style="margin-bottom: 10px">{{ passwordError }}</p>
+    <p v-if="passwordSuccess" class="success-text" style="margin-bottom: 10px">{{ passwordSuccess }}</p>
+
+    <div class="modal-actions">
+      <button class="btn-outline" @click="cerrarModalPassword">Cancelar</button>
+      <button
+        class="btn-primary-sm"
+        :disabled="!canSubmitPassword || cambiandoPassword"
+        @click="handleChangePassword"
+      >
+        {{ cambiandoPassword ? 'Guardando...' : 'Actualizar' }}
+      </button>
+    </div>
+  </div>
+</div>
+
         <!-- 🔘 BOTONES -->
         <div class="btn-row">
           <button class="btn-primary" @click="cerrarSesion">
@@ -156,6 +215,75 @@ const tokenExpirado = (token) => {
     return payload.exp * 1000 < Date.now()
   } catch {
     return true
+  }
+}
+
+// ── Cambio de contraseña ──────────────────────────────────────────
+const mostrarCambioPassword = ref(false)
+const cambiandoPassword = ref(false)
+const passwordError = ref('')
+const passwordSuccess = ref('')
+const passwordForm = ref({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+
+const passwordMismatch = computed(() =>
+  passwordForm.value.confirmPassword.length > 0 &&
+  passwordForm.value.newPassword !== passwordForm.value.confirmPassword
+)
+
+const canSubmitPassword = computed(() =>
+  passwordForm.value.oldPassword.length >= 1 &&
+  passwordForm.value.newPassword.length >= 6 &&
+  passwordForm.value.newPassword === passwordForm.value.confirmPassword
+)
+
+const cerrarModalPassword = () => {
+  mostrarCambioPassword.value = false
+  passwordForm.value = { oldPassword: '', newPassword: '', confirmPassword: '' }
+  passwordError.value = ''
+  passwordSuccess.value = ''
+}
+
+const handleChangePassword = async () => {
+  cambiandoPassword.value = true
+  passwordError.value = ''
+  passwordSuccess.value = ''
+
+  const username = localStorage.getItem('username')
+  const token = localStorage.getItem('token')
+
+  try {
+    const res = await fetch('/api/users/change-password', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        username,
+        old_password: passwordForm.value.oldPassword,
+        new_password: passwordForm.value.newPassword,
+        confirm_password: passwordForm.value.confirmPassword
+      })
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      passwordError.value = data.error || 'Error al cambiar la contraseña'
+    } else {
+      passwordSuccess.value = data.message
+      passwordForm.value = { oldPassword: '', newPassword: '', confirmPassword: '' }
+      // Cierra el modal luego de 1.5s
+      setTimeout(() => cerrarModalPassword(), 1500)
+    }
+  } catch {
+    passwordError.value = 'Error de conexión con el servidor'
+  } finally {
+    cambiandoPassword.value = false
   }
 }
 
@@ -686,5 +814,96 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
     width: 100%;
     min-height: 60px;
   }
+}
+
+.btn-outline-gold {
+  padding: 13px 36px;
+  border: 1px solid #b49150;
+  background: transparent;
+  color: #b49150;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .3s;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .9rem;
+  width: 100%;
+  min-height: 60px;
+}
+.btn-outline-gold:hover {
+  background: rgba(180,145,80,.1);
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.modal-field label {
+  font-size: .7rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: #b49150;
+}
+
+.modal-input {
+  background: #1a1a1a;
+  border: 1px solid rgba(180,145,80,.25);
+  color: #f0e6d0;
+  padding: 10px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .9rem;
+  outline: none;
+  transition: border-color .2s;
+}
+.modal-input:focus {
+  border-color: #b49150;
+}
+
+.btn-primary-sm {
+  padding: 10px 24px;
+  border: 1px solid #b49150;
+  background: #b49150;
+  color: #0d0d0d;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .8rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-primary-sm:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+.btn-primary-sm:not(:disabled):hover {
+  background: #c9a96e;
+}
+
+.error-text {
+  color: #c0392b;
+  font-size: .78rem;
+}
+.success-text {
+  color: #27ae60;
+  font-size: .78rem;
+}
+
+.btn-outline {
+  padding: 10px 20px;
+  border: 1px solid rgba(180,145,80,.3);
+  background: transparent;
+  color: #8a7455;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-outline:hover {
+  border-color: #b49150;
+  color: #b49150;
 }
 </style>

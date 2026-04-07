@@ -72,6 +72,7 @@ func main() {
 	r.POST("/api/reservations", controllers.CreateReservation)
 	r.GET("/api/proyectos", AuthMiddleware(), controllers.GetReservation)
 	r.DELETE("/api/reservations/:id", AuthMiddleware(), controllers.DeleteReservation)
+	r.PUT("/api/users/change-password", AuthMiddleware(), controllers.ChangePassword)
 
 	// ── Servir frontend Vue (dist/) ────────────────────────────────
 	r.Static("/assets", "./dist/assets")
