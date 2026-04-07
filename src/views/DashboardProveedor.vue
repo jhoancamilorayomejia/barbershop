@@ -537,7 +537,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   color: #f0e6d0;
-  font-size: 0.83rem;
+  font-size: 1rem;
 }
 
 thead { background: rgba(180,145,80,.1); }
@@ -552,7 +552,7 @@ th {
   color: #b49150;
   font-weight: 500;
   letter-spacing: .1em;
-  font-size: .68rem;
+  font-size: .8rem;
   text-transform: uppercase;
 }
 
@@ -652,7 +652,7 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   justify-content: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 468px) {
   html {
     font-size: 18px;
   }
