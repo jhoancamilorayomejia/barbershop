@@ -449,8 +449,7 @@ h1 {
 
 /* ── Calendario ── */
 .calendar {
-  width: 100%;
-  height: 100%; /* 👈 clave */
+  max-width: 560px;
 }
 
 .cal-header {
@@ -469,10 +468,9 @@ h1 {
 }
 
 .cal-grid {
-  flex: 1;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+  gap: 4px;
 }
 
 .day-cell.empty { background: transparent; }
