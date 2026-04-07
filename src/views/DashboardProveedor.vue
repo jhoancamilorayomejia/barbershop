@@ -245,7 +245,6 @@ const cerrarSesion = () => {
   localStorage.removeItem('rol')
   localStorage.removeItem('username')
 
-  alert('Sesión cerrada correctamente')
   router.push('/api/login')
 }
 

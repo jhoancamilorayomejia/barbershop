@@ -286,6 +286,7 @@ const scrollToForm = () => {
         <h2 class="fs-title">Administrador</h2>
         <p class="fs-sub">Ingresá tus credenciales</p>
         <div class="fs-form">
+          
           <div class="field">
             <label>Usuario</label>
             <input type="text" v-model="loginEmail" placeholder="Tu usuario" autocomplete="username" />
@@ -298,6 +299,12 @@ const scrollToForm = () => {
           <button class="btn-main btn-gold" @click="loginAdmin" :disabled="loginLoading">
             {{ loginLoading ? 'Ingresando...' : 'Ingresar' }}
           </button>
+          <button 
+  class="btn-main btn-outline-gold" 
+  @click="mostrarLogin = false"
+>
+  Cancelar
+</button>
         </div>
       </div>
     </div>
