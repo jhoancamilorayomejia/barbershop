@@ -646,7 +646,5 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   justify-content: center;
 }
 
-html {
-  font-size: 18px;
-}
+
 </style>

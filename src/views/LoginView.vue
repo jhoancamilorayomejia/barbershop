@@ -448,9 +448,9 @@ const scrollToForm = () => {
   position: relative;
   z-index: 1;
 
-  width: 93%;
+  width: 100%;
   max-width: 100%;   /* 🔥 evita que se encoja */
-  margin: 5;         /* 🔥 elimina centrado */
+  margin: 0;         /* 🔥 elimina centrado */
   
   padding: 48px 20px 60px;
 }
