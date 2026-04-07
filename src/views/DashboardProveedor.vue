@@ -330,7 +330,7 @@ onMounted(() => {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .screen {
-  min-height: 60vh;
+  min-height: 100vh;
   background: #0d0d0d;
   display: flex;
   align-items: flex-start;
@@ -446,14 +446,7 @@ h1 {
 
 /* ── Calendario ── */
 .calendar {
-  width: 100%;
-  max-width: 520px; /* 👈 controla qué tan ancho se ve */
-  margin: 10px auto 0;/
-}
-
-.center-content {
-  align-items: center;
-  width: 100%;
+  max-width: 560px;
 }
 
 .cal-header {
