@@ -541,13 +541,13 @@ table {
   width: 100%;
   border-collapse: collapse;
   color: #f0e6d0;
-  font-size: 1rem;
+  font-size: 1.4rem;
 }
 
 thead { background: rgba(180,145,80,.1); }
 
 th, td {
-  padding: 14px;
+  padding: 22px;
   border-bottom: 1px solid rgba(180,145,80,.2);
   text-align: center;
 }
@@ -556,7 +556,7 @@ th {
   color: #b49150;
   font-weight: 500;
   letter-spacing: .1em;
-  font-size: .8rem;
+  font-size: 1rem;
   text-transform: uppercase;
 }
 
@@ -575,6 +575,11 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 8px;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
 }
 
 .btn-primary {
@@ -606,11 +611,11 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
 }
 
 .btn-delete {
-  padding: 8px 14px;
+  padding: 12px 16px;
   border: 1px solid #c0392b;
   background: transparent;
   color: #c0392b;
-  font-size: .65rem;
+  font-size: 0.8rem;
   cursor: pointer;
   transition: all .2s;
 }
