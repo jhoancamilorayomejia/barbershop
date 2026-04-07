@@ -367,11 +367,10 @@ onMounted(() => {
   z-index: 10;
   width: 100%;
   max-width: 100px;
-  height: 100vh;
   background: #141414;
-  border: none;
+  border: 1px solid rgba(180,145,80,.2);
   box-shadow: 0 32px 80px rgba(0,0,0,.7);
-  padding: 20px 10px;
+  padding: 60px 40px;
   text-align: center;
 }
 
@@ -380,7 +379,6 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  justify-content: flex-start;
 }
 
 .eyebrow {
