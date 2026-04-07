@@ -330,7 +330,7 @@ onMounted(() => {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .screen {
-  min-height: 90vh;
+  min-height: 60vh;
   background: #0d0d0d;
   display: flex;
   align-items: flex-start;
@@ -474,7 +474,7 @@ h1 {
 .cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  gap: 4px;
 }
 
 .day-cell.empty { background: transparent; }
@@ -483,6 +483,7 @@ h1 {
   background: transparent;
   border: 1px solid rgba(180,145,80,.12);
   color: #666;
+  font-size: 1rem;
   padding: 8px 4px 4px;
   cursor: pointer;
   transition: all .2s;
@@ -492,8 +493,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  min-height: 80px;  /* 👈 antes 60px */
-  font-size: 1.2rem; /* 👈 texto más grande */
+  min-height: 60px;
   justify-content: center;
 }
 .day-btn:hover {
