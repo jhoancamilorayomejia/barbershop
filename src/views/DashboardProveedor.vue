@@ -331,14 +331,9 @@ onMounted(() => {
 
 .screen {
   min-height: 100vh;
-  background: #0d0d0d;
-  display: flex;
+  padding: 0; /* ❌ elimina espacios */
   align-items: flex-start;
-  justify-content: flex-start;
-  padding: 20px 10px;
-  font-family: 'Montserrat', sans-serif;
-  position: relative;
-  overflow: hidden;
+  justify-content: center; /* centra horizontal */
 }
 
 .bg-grid,
@@ -363,22 +358,16 @@ onMounted(() => {
 .glow.right { background: radial-gradient(circle, #b4915015, transparent 70%); bottom: -100px; right: -150px; }
 
 .card {
-  position: relative;
-  z-index: 10;
   width: 100%;
-  max-width: 700px;
-  background: #141414;
-  border: 1px solid rgba(180,145,80,.2);
-  box-shadow: 0 32px 80px rgba(0,0,0,.7);
-  padding: 60px 40px;
-  text-align: center;
+  max-width: 100%;   /* ❌ quita límite */
+  height: 100vh;     /* 👈 ocupa toda la pantalla */
+  padding: 20px 10px; /* más compacto */
+  border: none;      /* opcional (más limpio tipo app) */
 }
 
 .center-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  height: 100%;
+  justify-content: flex-start;
 }
 
 .eyebrow {
@@ -446,7 +435,8 @@ h1 {
 
 /* ── Calendario ── */
 .calendar {
-  max-width: 560px;
+  width: 100%;
+  height: 100%; /* 👈 clave */
 }
 
 .cal-header {
@@ -465,29 +455,18 @@ h1 {
 }
 
 .cal-grid {
+  flex: 1;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 6px;
 }
 
 .day-cell.empty { background: transparent; }
 
 .day-btn {
-  background: transparent;
-  border: 1px solid rgba(180,145,80,.12);
-  color: #666;
-  font-size: 1rem;
-  padding: 8px 4px 4px;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: 'Montserrat', sans-serif;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  min-height: 60px;
-  justify-content: center;
+  min-height: 100%;
+  height: 100%;
+  font-size: 1.2rem;
 }
 .day-btn:hover {
   border-color: rgba(180,145,80,.5);
