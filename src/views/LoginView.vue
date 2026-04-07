@@ -416,7 +416,7 @@ const scrollToForm = () => {
 .btn-outline-gold:hover { border-color: #b49150 !important; }
 
 .btn-hero {
-  width: 110%; min-height: 65px;
+  width: 128%; min-height: 85px;
   padding: 0 20px;
   background: #b49150; color: #0d0d0d;
   border: none;
@@ -430,7 +430,7 @@ const scrollToForm = () => {
 }
 
 .btn-ghost {
-  width: 110%; min-height: 65px;
+  width: 128%; min-height: 85px;
   padding: 0 20px;
   background: transparent; color: #8a7455;
   border: 2px solid rgba(180,145,80,.22);
@@ -445,24 +445,18 @@ const scrollToForm = () => {
 
 /* ── SECCIÓN FORM — ancho completo en móvil ── */
 .section-form {
-  position: relative;
-  z-index: 1;
-
+  position: relative; z-index: 1;
+  /* Sin max-width en móvil → ocupa todo el ancho */
   width: 100%;
-  min-height: 100vh; /* 🔥 ocupa toda la altura del celular */
-
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* centra vertical */
+  padding: 48px 20px 60px;
 }
 
 /* Solo en desktop limitamos el ancho */
-@media (min-width: 640px) {
+@media (min-width: 440px) {
   .section-form {
-    max-width: 680px;
+    max-width: 480px;
     margin: 0 auto;
-    padding: 60px 32px 80px;
+    padding: 30px 32px 40px;
   }
 }
 
@@ -471,39 +465,39 @@ const scrollToForm = () => {
 .section-title {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(2.2rem, 8vw, 4rem);
-  font-weight: 600; color: #f0e6d0;
-  letter-spacing: .06em; margin: 10px 0 14px;
+  font-weight: 640; color: #f0e6d0;
+  letter-spacing: .06em; margin: 30px 0 34px;
 }
 
 .section-sub {
-  font-size: 15px; font-weight: 300;
-  color: #6a5c44; margin-bottom: 24px;
+  font-size: 15px; font-weight: 340;
+  color: #6a5c44; margin-bottom: 44px;
 }
 
 .divider {
   display: flex; align-items: center;
-  justify-content: center; gap: 12px;
+  justify-content: center; gap: 16px;
 }
 .divider span:not(.diamond) {
-  width: 60px; height: 1px;
+  width: 80px; height: 10px;
   background: linear-gradient(90deg, transparent, #b49150);
 }
 .divider span:last-child { background: linear-gradient(90deg, #b49150, transparent); }
 .diamond { font-size: .4rem; color: #b49150; }
 
 /* ── FORM ── */
-.form { display: flex; flex-direction: column; gap: 24px; }
+.form { display: flex; flex-direction: column; gap: 44px; }
 
-.field { display: flex; flex-direction: column; gap: 8px; }
+.field { display: flex; flex-direction: column; gap: 28px; }
 
 .field label {
   /* 14px mínimo legible sin zoom */
-  font-size: 14px;
+  font-size: 24px;
   letter-spacing: .15em;
-  text-transform: uppercase; color: #8a7455; font-weight: 500;
+  text-transform: uppercase; color: #8a7455; font-weight: 540;
 }
 .req { color: #b49150; }
-.hint { font-size: 14px; color: #4a3f30; }
+.hint { font-size: 18px; color: #4a3f30; }
 
 /* ── INPUTS — 16px+ evita zoom automático en iOS ── */
 .field input,
@@ -513,12 +507,12 @@ const scrollToForm = () => {
   border: 1px solid rgba(180,145,80,.2);
   color: #e8dcc8;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 300;
+  font-weight: 340;
   /* 16px es el umbral exacto donde iOS deja de hacer zoom */
   font-size: 16px;
   /* Altura táctil generosa: mínimo 52px */
-  min-height: 52px;
-  padding: 14px 16px;
+  min-height: 72px;
+  padding: 20px 22px;
   outline: none;
   width: 100%;
   -webkit-appearance: none;
@@ -541,7 +535,7 @@ const scrollToForm = () => {
   background-repeat: no-repeat;
   background-position: right 16px center;
   background-color: #1a1a1a;
-  padding-right: 44px; cursor: pointer;
+  padding-right: 64px; cursor: pointer;
 }
 .field select option { background: #141414; color: #e8dcc8; }
 
@@ -549,16 +543,16 @@ const scrollToForm = () => {
 .horas-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 32px;
 }
 
 .hora-btn {
   background: #1a1a1a;
   border: 1px solid rgba(180,145,80,.2);
   color: #6a5c44;
-  min-height: 52px;
+  min-height: 74px;
   padding: 0;
-  font-size: 16px;
+  font-size: 24px;
   cursor: pointer; transition: all .15s;
   font-family: 'Montserrat', sans-serif;
   -webkit-tap-highlight-color: transparent;
@@ -569,11 +563,11 @@ const scrollToForm = () => {
 .hora-btn:active { transform: scale(.94); }
 .hora-btn.active {
   background: #b49150; color: #0d0d0d;
-  border-color: #b49150; font-weight: 600;
+  border-color: #b49150; font-weight: 640;
 }
 
 .error-msg {
-  color: #e05555; font-size: 15px;
+  color: #e05555; font-size: 22px;
   text-align: center;
 }
 
@@ -581,19 +575,19 @@ const scrollToForm = () => {
 .success-panel {
   display: flex; flex-direction: column;
   align-items: center; text-align: center;
-  padding: 40px 0; gap: 20px;
+  padding: 40px 0; gap: 24px;
 }
 .success-icon { font-size: 3rem; color: #b49150; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 .success-panel h3 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2.6rem; font-weight: 600; color: #f0e6d0;
+  font-size: 2.6rem; font-weight: 640; color: #f0e6d0;
 }
-.success-panel p { color: #7a6a50; font-size: 16px; font-weight: 300; }
+.success-panel p { color: #7a6a50; font-size: 16px; font-weight: 340; }
 
 /* ── FOOTER ── */
 .footer {
-  text-align: center; padding: 28px 20px;
+  text-align: center; padding: 48px 40px;
   border-top: 1px solid rgba(180,145,80,.08);
   position: relative; z-index: 1;
 }
@@ -603,9 +597,9 @@ const scrollToForm = () => {
 .fullscreen-modal {
   position: fixed; inset: 0;
   background: #0d0d0d;
-  z-index: 2000;
+  z-index: 2080;
   display: flex; align-items: center; justify-content: center;
-  padding: 40px 20px;
+  padding: 60px 40px;
   overflow-y: auto;
 }
 
@@ -616,8 +610,8 @@ const scrollToForm = () => {
   position: relative;
 }
 
-@media (min-width: 640px) {
-  .fs-inner { max-width: 500px; }
+@media (min-width: 660px) {
+  .fs-inner { max-width: 520px; }
 }
 
 .fs-close {
@@ -650,13 +644,13 @@ const scrollToForm = () => {
 .fs-actions {
   width: 100%;
   display: flex; flex-direction: column;
-  gap: 12px;
+  gap: 22px;
 }
 
 .fs-form {
   width: 100%;
   display: flex; flex-direction: column;
-  gap: 20px;
+  gap: 40px;
 }
 .fs-form .field { text-align: left; }
 
