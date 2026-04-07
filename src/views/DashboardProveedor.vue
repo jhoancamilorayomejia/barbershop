@@ -125,8 +125,13 @@
       />
     </div>
 
-    <div class="modal-field">
-      <label>Confirmar nueva contraseña</label>
+    
+     
+
+
+        <!-- 🔘 BOTONES -->
+        <div class="btn-row">
+           <label>Confirmar nueva contraseña</label>
       <input
         v-model="passwordForm.confirmPassword"
         type="password"
@@ -150,10 +155,6 @@
       </button>
     </div>
   </div>
-</div>
-
-        <!-- 🔘 BOTONES -->
-        <div class="btn-row">
           <button class="btn-primary" @click="cerrarSesion">
             <span>Cerrar sesión</span>
           </button>
@@ -895,8 +896,8 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
 .btn-outline {
   padding: 10px 20px;
   border: 1px solid rgba(180,145,80,.3);
-  background: transparent;
-  color: #8a7455;
+  color: #000000;
+  background: #b49150;
   font-family: 'Montserrat', sans-serif;
   font-size: .8rem;
   cursor: pointer;
