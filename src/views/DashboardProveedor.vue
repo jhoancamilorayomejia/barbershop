@@ -327,14 +327,33 @@ onMounted(() => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
 
+/* RESET */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.screen {
-  align-items: flex-start; /* 🔥 sube el contenido */
-  justify-content: flex-start;
-  padding: 20px 10px;
+/* 🔥 FONDO GLOBAL (SOLUCIONA BLANCO) */
+:global(html),
+:global(body),
+:global(#app) {
+  background: #0d0d0d;
+  min-height: 100%;
+  margin: 0;
+  font-size: 18px; /* 🔥 hace todo más grande */
 }
 
+/* ── LAYOUT ── */
+.screen {
+  min-height: 100vh;
+  background: #0d0d0d;
+  display: flex;
+  align-items: flex-start; /* 🔥 arriba */
+  justify-content: center;
+  padding: 20px 10px;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* FONDO DECORATIVO */
 .bg-grid,
 .glow { pointer-events: none; }
 
@@ -356,11 +375,12 @@ onMounted(() => {
 .glow.left  { background: radial-gradient(circle, #b4915025, transparent 70%); top: -100px; left: -150px; }
 .glow.right { background: radial-gradient(circle, #b4915015, transparent 70%); bottom: -100px; right: -150px; }
 
+/* CARD */
 .card {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 95vw;
+  max-width: 95vw; /* 🔥 más ancho en móvil */
   background: #141414;
   border: 1px solid rgba(180,145,80,.2);
   box-shadow: 0 32px 80px rgba(0,0,0,.7);
@@ -372,11 +392,12 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 24px; /* 🔥 más aire */
 }
 
+/* TEXTOS */
 .eyebrow {
-  font-size: 2.8rem;
+  font-size: .9rem;
   letter-spacing: .3em;
   text-transform: uppercase;
   color: #b49150;
@@ -384,11 +405,12 @@ onMounted(() => {
 
 h1 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2.3rem;
+  font-size: 2.8rem; /* 🔥 más grande */
   color: #f0e6d0;
   letter-spacing: .08em;
 }
 
+/* DIVIDER */
 .divider {
   display: flex;
   align-items: center;
@@ -401,251 +423,58 @@ h1 {
 .divider span:last-child {
   background: linear-gradient(90deg, #b49150, transparent);
 }
-.diamond { font-size: .4rem; color: #b49150; }
+.diamond { font-size: .5rem; color: #b49150; }
 
-/* ── Navegación de mes ── */
+/* ── MES ── */
 .month-nav {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-top: 6px;
+  gap: 16px;
 }
 
 .month-arrow {
-  background: transparent;
-  border: 1px solid rgba(180,145,80,.3);
-  color: #b49150;
-  width: 34px; height: 34px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: all .25s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-.month-arrow:hover {
-  background: #b49150;
-  color: #0d0d0d;
+  width: 44px; height: 44px; /* 🔥 más grande */
+  font-size: 1.4rem;
 }
 
 .month-label {
-  font-size: 2.8rem;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: #f0e6d0;
-  min-width: 170px;
-  text-align: center;
+  font-size: 1.1rem;
 }
 
-/* ── Calendario ── */
+/* ── CALENDARIO ── */
 .calendar { width: 100%; }
 
-.cal-header {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-  margin-bottom: 6px;
-}
 .cal-header span {
   font-size: .85rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: #b49150;
-  text-align: center;
-  padding: 4px 0;
 }
-
-.cal-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
-}
-
-.day-cell.empty { background: transparent; }
 
 .day-btn {
-  background: transparent;
-  border: 1px solid rgba(180,145,80,.12);
-  color: #666;
   font-size: 1rem;
-  padding: 8px 4px 4px;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: 'Montserrat', sans-serif;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  min-height: 60px;
-  justify-content: center;
-}
-.day-btn:hover {
-  border-color: rgba(180,145,80,.5);
-  color: #f0e6d0;
+  min-height: 65px; /* 🔥 táctil cómodo */
 }
 
-.day-btn.has-data {
-  color: #f0e6d0;
-  border-color: rgba(180,145,80,.35);
-}
-
-.day-btn.today {
-  box-shadow: 0 0 0 1px rgba(180,145,80,.45);
-  color: #f0e6d0;
-}
-
-.day-btn.selected {
-  background: #b49150;
-  color: #0d0d0d;
-  border-color: #b49150;
-  font-weight: 600;
-}
-.day-btn.selected .dot { background: #0d0d0d; }
-
-.dot {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: #b49150;
-  flex-shrink: 0;
-}
-
-/* ── Tabla ── */
-.table-section { width: 100%; }
-
-.date-title {
-  font-size: .68rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: #b49150;
-  margin-bottom: 14px;
-}
-
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-}
-
+/* ── TABLA ── */
 table {
-  width: 100%;
-  border-collapse: collapse;
-  color: #f0e6d0;
   font-size: 1rem;
-}
-
-thead { background: rgba(180,145,80,.1); }
-
-th, td {
-  padding: 14px;
-  border-bottom: 1px solid rgba(180,145,80,.2);
-  text-align: center;
 }
 
 th {
-  color: #b49150;
-  font-weight: 500;
-  letter-spacing: .1em;
   font-size: .8rem;
-  text-transform: uppercase;
 }
 
-tbody tr:hover { background: rgba(180,145,80,.08); }
-
-.empty {
-  color: #555;
-  font-size: .82rem;
-  margin-top: 6px;
+td {
+  padding: 14px;
 }
 
-/* ── Botones ── */
-.btn-row {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 8px;
-}
-
+/* ── BOTONES ── */
 .btn-primary {
-  padding: 13px 36px;
-  border: 1px solid #b49150;
-  background: transparent;
-  color: #b49150;
-  letter-spacing: .3em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all .3s;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .9rem;
+  width: 100%;
   min-height: 60px;
-  width: 100%;
-}
-.btn-primary:hover {
-  background: #b49150;
-  color: #0d0d0d;
+  font-size: .9rem;
 }
 
-/* ── Transición ── */
-.fade-slide-enter-active {
-  transition: opacity .3s ease, transform .3s ease;
-}
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.btn-delete {
-  padding: 8px 14px;
-  border: 1px solid #c0392b;
-  background: transparent;
-  color: #c0392b;
-  font-size: .65rem;
-  cursor: pointer;
-  transition: all .2s;
-}
-
-.btn-delete:hover {
-  background: #c0392b;
-  color: #fff;
-}
-
-/* MODAL (reutilizable) */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
+/* MODAL */
 .modal {
-  background: #141414;
-  border: 1px solid rgba(180,145,80,.2);
-  padding: 30px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.modal h3 {
-  color: #f0e6d0;
-  margin-bottom: 10px;
-}
-
-.modal p {
-  color: #8a7455;
-  margin-bottom: 20px;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-html, body, #app {
-  background: radial-gradient(circle at top, #0f2027, #0d0d0d);
+  max-width: 90%;
 }
 </style>
