@@ -334,7 +334,7 @@ onMounted(() => {
   background: #0d0d0d;
   display: flex;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 0;
   font-family: 'Montserrat', sans-serif;
   position: relative;
