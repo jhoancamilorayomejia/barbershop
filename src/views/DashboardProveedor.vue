@@ -436,7 +436,7 @@ h1 {
 }
 
 .month-label {
-  font-size: .78rem;
+  font-size: 1rem;
   letter-spacing: .18em;
   text-transform: uppercase;
   color: #f0e6d0;
@@ -454,7 +454,7 @@ h1 {
   margin-bottom: 6px;
 }
 .cal-header span {
-  font-size: .6rem;
+  font-size: .85rem;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: #b49150;
@@ -583,7 +583,9 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   cursor: pointer;
   transition: all .3s;
   font-family: 'Montserrat', sans-serif;
-  font-size: .68rem;
+  font-size: .9rem;
+  width: 100%;
+  min-height: 60px;
 }
 .btn-primary:hover {
   background: #b49150;
@@ -666,7 +668,7 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   }
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 1rem;
   }
 
   .btn-primary {
