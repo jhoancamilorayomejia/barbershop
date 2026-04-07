@@ -449,8 +449,8 @@ const scrollToForm = () => {
   z-index: 1;
 
   width: 93%;
-  max-width: 93%;   /* 🔥 evita que se encoja */
-  margin: 0;         /* 🔥 elimina centrado */
+  max-width: 100%;   /* 🔥 evita que se encoja */
+  margin: 5;         /* 🔥 elimina centrado */
   
   padding: 48px 20px 60px;
 }
@@ -502,7 +502,7 @@ const scrollToForm = () => {
   border: 1px solid rgba(180,145,80,.2);
   color: #e8dcc8;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 340;
+  font-weight: 360;
   /* 16px es el umbral exacto donde iOS deja de hacer zoom */
   font-size: 22px;
   /* Altura táctil generosa: mínimo 52px */

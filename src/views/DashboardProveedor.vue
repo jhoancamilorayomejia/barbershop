@@ -330,15 +330,9 @@ onMounted(() => {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .screen {
-  min-height: 100vh;
-  background: #0d0d0d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 16px;
-  font-family: 'Montserrat', sans-serif;
-  position: relative;
-  overflow: hidden;
+  align-items: flex-start; /* 🔥 sube el contenido */
+  justify-content: flex-start;
+  padding: 20px 10px;
 }
 
 .bg-grid,
@@ -366,11 +360,11 @@ onMounted(() => {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 700px;
+  max-width: 95vw;
   background: #141414;
   border: 1px solid rgba(180,145,80,.2);
   box-shadow: 0 32px 80px rgba(0,0,0,.7);
-  padding: 60px 40px;
+  padding: 40px 20px;
   text-align: center;
 }
 
@@ -382,7 +376,7 @@ onMounted(() => {
 }
 
 .eyebrow {
-  font-size: .65rem;
+  font-size: 2.8rem;
   letter-spacing: .3em;
   text-transform: uppercase;
   color: #b49150;
@@ -436,7 +430,7 @@ h1 {
 }
 
 .month-label {
-  font-size: .78rem;
+  font-size: 2.8rem;
   letter-spacing: .18em;
   text-transform: uppercase;
   color: #f0e6d0;
@@ -454,7 +448,7 @@ h1 {
   margin-bottom: 6px;
 }
 .cal-header span {
-  font-size: .6rem;
+  font-size: .85rem;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: #b49150;
@@ -474,7 +468,7 @@ h1 {
   background: transparent;
   border: 1px solid rgba(180,145,80,.12);
   color: #666;
-  font-size: .78rem;
+  font-size: 1rem;
   padding: 8px 4px 4px;
   cursor: pointer;
   transition: all .2s;
@@ -484,7 +478,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  min-height: 42px;
+  min-height: 60px;
   justify-content: center;
 }
 .day-btn:hover {
@@ -537,13 +531,13 @@ table {
   width: 100%;
   border-collapse: collapse;
   color: #f0e6d0;
-  font-size: 0.83rem;
+  font-size: 1rem;
 }
 
 thead { background: rgba(180,145,80,.1); }
 
 th, td {
-  padding: 10px 12px;
+  padding: 14px;
   border-bottom: 1px solid rgba(180,145,80,.2);
   text-align: center;
 }
@@ -552,7 +546,7 @@ th {
   color: #b49150;
   font-weight: 500;
   letter-spacing: .1em;
-  font-size: .68rem;
+  font-size: .8rem;
   text-transform: uppercase;
 }
 
@@ -583,7 +577,9 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   cursor: pointer;
   transition: all .3s;
   font-family: 'Montserrat', sans-serif;
-  font-size: .68rem;
+  font-size: .9rem;
+  min-height: 60px;
+  width: 100%;
 }
 .btn-primary:hover {
   background: #b49150;
@@ -648,5 +644,9 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   display: flex;
   gap: 10px;
   justify-content: center;
+}
+
+html {
+  font-size: 18px;
 }
 </style>
