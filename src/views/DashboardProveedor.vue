@@ -330,7 +330,7 @@ onMounted(() => {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .screen {
-  min-height: 100vh;
+  min-height: 60vh;
   background: #0d0d0d;
   display: flex;
   align-items: flex-start;
@@ -447,8 +447,13 @@ h1 {
 /* ── Calendario ── */
 .calendar {
   width: 100%;
-  max-width: 420px; /* 👈 controla qué tan ancho se ve */
-  margin: 0 auto;   /* 👈 lo centra horizontalmente */
+  max-width: 520px; /* 👈 controla qué tan ancho se ve */
+  margin: 10px auto 0;/
+}
+
+.center-content {
+  align-items: center;
+  width: 100%;
 }
 
 .cal-header {
@@ -469,7 +474,7 @@ h1 {
 .cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 8px;
 }
 
 .day-cell.empty { background: transparent; }
@@ -478,7 +483,6 @@ h1 {
   background: transparent;
   border: 1px solid rgba(180,145,80,.12);
   color: #666;
-  font-size: 1rem;
   padding: 8px 4px 4px;
   cursor: pointer;
   transition: all .2s;
@@ -488,7 +492,8 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  min-height: 60px;
+  min-height: 80px;  /* 👈 antes 60px */
+  font-size: 1.2rem; /* 👈 texto más grande */
   justify-content: center;
 }
 .day-btn:hover {
