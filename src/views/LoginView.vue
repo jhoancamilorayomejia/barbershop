@@ -445,11 +445,14 @@ const scrollToForm = () => {
 
 /* ── SECCIÓN FORM — ancho completo en móvil ── */
 .section-form {
-  width: 100%;
-  max-width: 600px;   /* 🔥 controla el ancho */
-  margin: 0 auto;     /* 🔥 lo centra */
+  position: relative;
+  z-index: 1;
+
+  width: 93%;
+  max-width: 93%;   /* 🔥 evita que se encoja */
+  margin: 0;         /* 🔥 elimina centrado */
   
-  padding: 60px 24px 80px; /* 🔥 más grande visualmente */
+  padding: 48px 20px 60px;
 }
 
 .section-header { text-align: center; margin-bottom: 36px; }
@@ -501,9 +504,9 @@ const scrollToForm = () => {
   font-family: 'Montserrat', sans-serif;
   font-weight: 340;
   /* 16px es el umbral exacto donde iOS deja de hacer zoom */
-  font-size: 18px;
+  font-size: 22px;
   /* Altura táctil generosa: mínimo 52px */
-  min-height: 80px;
+  min-height: 90px;
   padding: 20px 22px;
   outline: none;
   width: 100%;
