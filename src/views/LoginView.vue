@@ -85,14 +85,12 @@ const DURACION_MINUTOS = 60
 
 const horasDisponibles = computed(() => {
   const horas = []
-
   for (let h = 6; h <= 20; h++) {
     for (let m = 0; m < 60; m += DURACION_MINUTOS) {
       if (h === 20 && m > 0) continue
-      horas.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`)
+      horas.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'00')}`)
     }
   }
-
   return horas
 })
 
@@ -178,7 +176,7 @@ const scrollToForm = () => {
       <div class="hero-inner">
         <span class="eyebrow">Barbería &amp; Estilo</span>
         <h1 class="hero-title">
-          Barber Charly<br>
+          Barber Charly
           <em>Tu estilo empieza donde termina lo común</em>
         </h1>
         <p class="hero-sub">Agendá tu turno en segundos.</p>
@@ -202,7 +200,7 @@ const scrollToForm = () => {
           <div class="success-icon">✦</div>
           <h3>¡Turno solicitado!</h3>
           <p>Te contactaremos por WhatsApp para confirmar.</p>
-          <button class="btn-app btn-app-outline" @click="nuevaReserva">Hacer otra reserva</button>
+          <button class="btn-main btn-outline-gold" @click="nuevaReserva">Hacer otra reserva</button>
         </div>
 
         <form v-else key="form" class="form" @submit.prevent="enviar">
@@ -251,8 +249,8 @@ const scrollToForm = () => {
 
           <p v-if="errorMsg" class="error-msg">{{ errorMsg }}</p>
 
-          <button type="submit" class="btn-app btn-app-gold">
-            Confirmar Turno
+          <button type="submit" class="btn-main btn-gold">
+            ✂ Confirmar Turno
           </button>
         </form>
       </transition>
@@ -263,23 +261,23 @@ const scrollToForm = () => {
       <p class="footer-text">© 2026 Barber Charly · Todos los derechos reservados.</p>
     </footer>
 
-    <!-- ── MODAL CONFIRMACIÓN ── -->
+    <!-- ── MODAL CONFIRMACIÓN PANTALLA COMPLETA ── -->
     <div v-if="mostrarModal" class="fullscreen-modal">
       <div class="fs-inner">
         <div class="fs-icon">✦</div>
         <h2 class="fs-title">Confirmar reserva</h2>
         <p class="fs-sub">¿Confirmás tu turno?</p>
         <div class="fs-actions">
-          <button class="btn-app btn-app-gold" @click="confirmarReserva" :disabled="loading">
+          <button class="btn-main btn-gold" @click="confirmarReserva" :disabled="loading">
             {{ loading ? 'Guardando...' : 'Sí, confirmar' }}
           </button>
-          <button class="btn-app btn-app-outline" @click="mostrarModal = false">Cancelar</button>
+          <button class="btn-main btn-outline-gold" @click="mostrarModal = false">Cancelar</button>
         </div>
-        <p v-if="errorMsg" class="error-msg">{{ errorMsg }}</p>
+        <p v-if="errorMsg" class="error-msg" style="margin-top:16px">{{ errorMsg }}</p>
       </div>
     </div>
 
-    <!-- ── MODAL LOGIN PANTALLA COMPLETA ── -->
+    <!-- ── LOGIN PANTALLA COMPLETA ── -->
     <div v-if="mostrarLogin" class="fullscreen-modal">
       <div class="fs-inner">
         <button class="fs-close" @click="mostrarLogin = false">✕</button>
@@ -290,24 +288,14 @@ const scrollToForm = () => {
         <div class="fs-form">
           <div class="field">
             <label>Usuario</label>
-            <input
-              type="text"
-              v-model="loginEmail"
-              placeholder="Tu usuario"
-              autocomplete="username"
-            />
+            <input type="text" v-model="loginEmail" placeholder="Tu usuario" autocomplete="username" />
           </div>
           <div class="field">
             <label>Contraseña</label>
-            <input
-              type="password"
-              v-model="loginPassword"
-              placeholder="••••••••"
-              autocomplete="current-password"
-            />
+            <input type="password" v-model="loginPassword" placeholder="••••••••" autocomplete="current-password" />
           </div>
           <p v-if="loginError" class="error-msg">{{ loginError }}</p>
-          <button class="btn-app btn-app-gold" @click="loginAdmin" :disabled="loginLoading">
+          <button class="btn-main btn-gold" @click="loginAdmin" :disabled="loginLoading">
             {{ loginLoading ? 'Ingresando...' : 'Ingresar' }}
           </button>
         </div>
@@ -319,22 +307,25 @@ const scrollToForm = () => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap');
 
-/* ── RESET Y META ── */
+/* ── RESET ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Previene zoom en iOS al hacer focus en inputs */
-input, select, textarea {
-  font-size: 16px !important;
+/* ── ANTI-ZOOM iOS: todos los inputs a 18px ── */
+input, select, textarea, button {
+  font-size: 18px;
+  -webkit-text-size-adjust: 100%;
 }
 
 /* ── BASE ── */
 .page {
-  min-height: 50vh;
+  min-height: 100vh;
   background: #0d0d0d;
   font-family: 'Montserrat', sans-serif;
   position: relative;
   overflow-x: hidden;
   color: #f0e6d0;
+  /* Tamaño base grande para móvil */
+  font-size: 18px;
 }
 
 .bg-grid {
@@ -357,111 +348,116 @@ input, select, textarea {
 /* ── HERO ── */
 .hero {
   position: relative; z-index: 1;
-  min-height: 55vh;
+  min-height: 50vh;
   display: flex; align-items: center; justify-content: center;
   text-align: center;
-  padding: 30px 24px 20px;
+  padding: 60px 24px 48px;
   border-bottom: 1px solid rgba(180,145,80,.1);
 }
 
-.hero-inner { max-width: 700px; width: 100%; }
+.hero-inner { max-width: 680px; width: 100%; }
 
 .eyebrow {
   display: inline-block;
-  font-size: .78rem; letter-spacing: .4em;
+  font-size: 1rem; letter-spacing: .35em;
   text-transform: uppercase; color: #b49150;
   margin-bottom: 20px;
 }
 
 .hero-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.8rem, 10vw, 6.5rem);
+  font-size: clamp(3rem, 11vw, 7rem);
   font-weight: 600; line-height: 1.1;
   color: #f0e6d0; margin-bottom: 16px;
+  display: flex; flex-direction: column; gap: 8px;
 }
-.hero-title em { font-style: italic; color: #b49150; font-size: .82em; display: block; margin-top: 6px; }
+.hero-title em {
+  font-style: italic; color: #b49150;
+  font-size: clamp(1.4rem, 5vw, 2.8rem);
+}
 
 .hero-sub {
-  font-size: 1rem; font-weight: 300;
+  font-size: 1.1rem; font-weight: 300;
   color: #6a5c44; letter-spacing: .04em;
   margin-bottom: 36px;
 }
 
 .hero-actions {
   display: flex; flex-direction: column;
-  align-items: center; gap: 14px;
+  align-items: stretch; gap: 14px;
 }
 
-/* ── BOTONES TIPO APP ── */
-.btn-app {
+/* ── BOTÓN PRINCIPAL TIPO APP ── */
+.btn-main {
   width: 100%;
-  max-width: 420px;
-  padding: 22px 24px;
+  padding: 22px 20px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  letter-spacing: .15em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   cursor: pointer;
   border: none;
-  transition: all .25s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
+.btn-main:active { transform: scale(.97); }
 
-.btn-app-gold {
+.btn-gold {
   background: #b49150;
   color: #0d0d0d;
 }
-.btn-app-gold:hover { background: #c9a862; }
-.btn-app-gold:active { background: #9e7e42; transform: scale(.98); }
+.btn-gold:hover { background: #c9a862; }
+.btn-gold:disabled { opacity: .6; cursor: not-allowed; }
 
-.btn-app-outline {
+.btn-outline-gold {
   background: transparent;
   color: #b49150;
-  border: 1px solid rgba(180,145,80,.4) !important;
+  border: 2px solid rgba(180,145,80,.45) !important;
 }
-.btn-app-outline:hover { border-color: #b49150 !important; background: rgba(180,145,80,.07); }
+.btn-outline-gold:hover { border-color: #b49150 !important; }
 
-/* Botones hero tienen borde para el ghost */
 .btn-hero {
-  width: 100%; max-width: 420px;
-  padding: 22px 24px;
+  width: 100%;
+  padding: 22px 20px;
   background: #b49150; color: #0d0d0d;
   border: none;
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.05rem; font-weight: 600;
-  letter-spacing: .15em; text-transform: uppercase;
-  cursor: pointer; transition: all .25s;
+  font-size: 1.1rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  cursor: pointer; transition: all .2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
-.btn-hero:active { transform: scale(.98); }
 
 .btn-ghost {
-  width: 100%; max-width: 420px;
-  padding: 22px 24px;
+  width: 100%;
+  padding: 22px 20px;
   background: transparent; color: #8a7455;
-  border: 1px solid rgba(180,145,80,.25);
+  border: 2px solid rgba(180,145,80,.22);
   font-family: 'Montserrat', sans-serif;
-  font-size: 1rem; font-weight: 400;
-  letter-spacing: .12em; text-transform: uppercase;
-  cursor: pointer; transition: all .25s;
+  font-size: 1.05rem; font-weight: 400;
+  letter-spacing: .1em; text-transform: uppercase;
+  cursor: pointer; transition: all .2s;
+  -webkit-tap-highlight-color: transparent;
 }
 .btn-ghost:hover { color: #b49150; border-color: rgba(180,145,80,.5); }
 
 /* ── SECCIÓN FORM ── */
 .section-form {
   position: relative; z-index: 1;
-  max-width: 640px; margin: 0 auto;
-  padding: 52px 24px 60px;
+  max-width: 620px; margin: 0 auto;
+  padding: 48px 22px 60px;
 }
 
-.section-header { text-align: center; margin-bottom: 40px; }
+.section-header { text-align: center; margin-bottom: 36px; }
 
 .section-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.4rem, 8vw, 4rem);
+  font-size: clamp(2.6rem, 9vw, 4.5rem);
   font-weight: 600; color: #f0e6d0;
   letter-spacing: .06em; margin: 10px 0 20px;
 }
@@ -475,35 +471,38 @@ input, select, textarea {
   background: linear-gradient(90deg, transparent, #b49150);
 }
 .divider span:last-child { background: linear-gradient(90deg, #b49150, transparent); }
-.diamond { font-size: .4rem; color: #b49150; }
+.diamond { font-size: .45rem; color: #b49150; }
 
 /* ── FORM ── */
-.form { display: flex; flex-direction: column; gap: 22px; }
+.form { display: flex; flex-direction: column; gap: 26px; }
 
 .field { display: flex; flex-direction: column; gap: 10px; }
 
 .field label {
-  font-size: .82rem; letter-spacing: .18em;
+  font-size: .9rem; letter-spacing: .15em;
   text-transform: uppercase; color: #8a7455; font-weight: 500;
 }
 .req { color: #b49150; }
-.hint { font-size: .8rem; color: #4a3f30; }
+.hint { font-size: .85rem; color: #4a3f30; }
 
-/* inputs grandes tipo app — font-size 16px forzado arriba para evitar zoom iOS */
+/* ── INPUTS GRANDES — 18px evita zoom iOS ── */
 .field input,
 .field select,
 .field textarea {
   background: #1a1a1a;
-  border: 1px solid rgba(180,145,80,.2);
-  border-radius: 0;
+  border: 1px solid rgba(180,145,80,.22);
   color: #e8dcc8;
   font-family: 'Montserrat', sans-serif;
   font-weight: 300;
+  /* 18px es el mínimo para no disparar zoom en iOS */
+  font-size: 18px !important;
   padding: 20px 18px;
   outline: none;
-  transition: border-color .2s, background .2s;
-  resize: none; width: 100%;
+  width: 100%;
   -webkit-appearance: none;
+  border-radius: 0;
+  transition: border-color .2s, background .2s;
+  resize: none;
 }
 .field input::placeholder,
 .field textarea::placeholder { color: #3a3028; }
@@ -515,40 +514,43 @@ input, select, textarea {
 }
 
 .field select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23b49150' stroke-width='1.8' fill='none'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M1 1l7 7 7-7' stroke='%23b49150' stroke-width='2' fill='none'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 18px center;
   background-color: #1a1a1a;
-  padding-right: 46px; cursor: pointer;
+  padding-right: 50px; cursor: pointer;
 }
-.field select option { background: #141414; color: #e8dcc8; }
+.field select option { background: #141414; color: #e8dcc8; font-size: 16px; }
 
 /* ── HORAS ── */
 .horas-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
 
 .hora-btn {
   background: #1a1a1a;
-  border: 1px solid rgba(180,145,80,.18);
+  border: 1px solid rgba(180,145,80,.2);
   color: #6a5c44;
-  padding: 18px 4px;
-  font-size: .9rem;
+  /* Grande para toque fácil */
+  padding: 20px 8px;
+  font-size: 1rem;
   cursor: pointer; transition: all .15s;
   font-family: 'Montserrat', sans-serif;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  border-radius: 0;
 }
-.hora-btn:active { transform: scale(.95); }
+.hora-btn:active { transform: scale(.94); }
 .hora-btn.active {
   background: #b49150; color: #0d0d0d;
   border-color: #b49150; font-weight: 600;
 }
 
 .error-msg {
-  color: #e05555; font-size: .88rem;
-  text-align: center; padding: 4px 0;
+  color: #e05555; font-size: 1rem;
+  text-align: center;
 }
 
 /* ── ÉXITO ── */
@@ -561,9 +563,9 @@ input, select, textarea {
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 .success-panel h3 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2.6rem; font-weight: 600; color: #f0e6d0;
+  font-size: 2.8rem; font-weight: 600; color: #f0e6d0;
 }
-.success-panel p { color: #7a6a50; font-size: 1rem; font-weight: 300; }
+.success-panel p { color: #7a6a50; font-size: 1.1rem; font-weight: 300; }
 
 /* ── FOOTER ── */
 .footer {
@@ -571,51 +573,46 @@ input, select, textarea {
   border-top: 1px solid rgba(180,145,80,.08);
   position: relative; z-index: 1;
 }
-.footer-text { font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; color: #2e2820; }
+.footer-text { font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; color: #2e2820; }
 
-/* ── MODALES PANTALLA COMPLETA ── */
+/* ── PANTALLA COMPLETA (modal y login) ── */
 .fullscreen-modal {
   position: fixed; inset: 0;
   background: #0d0d0d;
   z-index: 2000;
   display: flex; align-items: center; justify-content: center;
-  padding: 32px 24px;
+  padding: 40px 24px;
   overflow-y: auto;
 }
 
 .fs-inner {
-  width: 100%; max-width: 480px;
+  width: 100%; max-width: 520px;
   display: flex; flex-direction: column;
   align-items: center; text-align: center;
-  gap: 0;
   position: relative;
 }
 
 .fs-close {
-  position: absolute; top: -8px; right: 0;
+  position: absolute; top: -4px; right: 0;
   background: transparent; border: none;
-  color: #6a5c44; font-size: 1.4rem;
-  cursor: pointer; padding: 8px;
-  line-height: 1;
-  transition: color .2s;
+  color: #6a5c44; font-size: 1.8rem;
+  cursor: pointer; padding: 10px;
+  line-height: 1; transition: color .2s;
+  -webkit-tap-highlight-color: transparent;
 }
 .fs-close:hover { color: #b49150; }
 
-.fs-icon {
-  font-size: 2.8rem; color: #b49150;
-  margin-bottom: 20px;
-}
+.fs-icon { font-size: 3rem; color: #b49150; margin-bottom: 20px; }
 
 .fs-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.4rem, 8vw, 3.6rem);
+  font-size: clamp(2.6rem, 9vw, 4rem);
   font-weight: 600; color: #f0e6d0;
-  letter-spacing: .04em;
-  margin-bottom: 10px;
+  letter-spacing: .04em; margin-bottom: 10px;
 }
 
 .fs-sub {
-  font-size: .9rem; font-weight: 300;
+  font-size: 1rem; font-weight: 300;
   color: #6a5c44; letter-spacing: .04em;
   margin-bottom: 36px;
 }
@@ -623,15 +620,14 @@ input, select, textarea {
 .fs-actions {
   width: 100%;
   display: flex; flex-direction: column;
-  gap: 14px; align-items: center;
+  gap: 14px;
 }
 
 .fs-form {
   width: 100%;
   display: flex; flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
-
 .fs-form .field { text-align: left; }
 
 /* ── TRANSICIÓN ── */
@@ -639,10 +635,10 @@ input, select, textarea {
 .fade-enter-from { opacity: 0; transform: translateY(-8px); }
 .fade-leave-to   { opacity: 0; transform: translateY(8px); }
 
-/* ── DESKTOP ── */
-@media (min-width: 601px) {
+/* ── DESKTOP — vuelve a dos columnas ── */
+@media (min-width: 640px) {
   .hero-actions { flex-direction: row; justify-content: center; }
-  .btn-hero, .btn-ghost { width: auto; min-width: 240px; }
+  .btn-hero, .btn-ghost { width: auto; min-width: 260px; }
   .horas-grid { grid-template-columns: repeat(5, 1fr); }
 }
 </style>
