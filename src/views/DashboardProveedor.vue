@@ -380,7 +380,6 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  height: 100%;
   justify-content: flex-start;
 }
 
