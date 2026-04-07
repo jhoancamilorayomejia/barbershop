@@ -321,15 +321,7 @@ const scrollToForm = () => {
   padding: 0;
 }
 
-.form {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  background: #111;
-  padding: 24px;
-  border: 1px solid rgba(180,145,80,.15);
-  border-radius: 12px;
-}
+
 
 .bg-grid {
   position: fixed; inset: 0;
@@ -424,7 +416,7 @@ const scrollToForm = () => {
 .btn-outline-gold:hover { border-color: #b49150 !important; }
 
 .btn-hero {
-  width: 100%; min-height: 56px;
+  width: 110%; min-height: 65px;
   padding: 0 20px;
   background: #b49150; color: #0d0d0d;
   border: none;
@@ -438,7 +430,7 @@ const scrollToForm = () => {
 }
 
 .btn-ghost {
-  width: 100%; min-height: 56px;
+  width: 110%; min-height: 65px;
   padding: 0 20px;
   background: transparent; color: #8a7455;
   border: 2px solid rgba(180,145,80,.22);
@@ -453,10 +445,16 @@ const scrollToForm = () => {
 
 /* ── SECCIÓN FORM — ancho completo en móvil ── */
 .section-form {
-  position: relative; z-index: 1;
-  /* Sin max-width en móvil → ocupa todo el ancho */
+  position: relative;
+  z-index: 1;
+
   width: 100%;
-  padding: 48px 20px 60px;
+  min-height: 100vh; /* 🔥 ocupa toda la altura del celular */
+
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centra vertical */
 }
 
 /* Solo en desktop limitamos el ancho */
