@@ -333,9 +333,10 @@ onMounted(() => {
   min-height: 100vh;
   background: #0d0d0d;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   padding: 0;
+  width: 0;
   font-family: 'Montserrat', sans-serif;
   position: relative;
   overflow: hidden;
@@ -468,7 +469,7 @@ h1 {
 .cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 10px;
+  gap: 14px;
 }
 
 .day-cell.empty { background: transparent; }
@@ -477,7 +478,7 @@ h1 {
   background: transparent;
   border: 1px solid rgba(180,145,80,.12);
   color: #666;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   padding: 8px 4px 4px;
   cursor: pointer;
   transition: all .2s;
