@@ -88,7 +88,7 @@ const horasDisponibles = computed(() => {
   for (let h = 6; h <= 20; h++) {
     for (let m = 0; m < 60; m += DURACION_MINUTOS) {
       if (h === 20 && m > 0) continue
-      horas.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'00')}`)
+      horas.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`)
     }
   }
   return horas
@@ -192,6 +192,7 @@ const scrollToForm = () => {
       <div class="section-header">
         <span class="eyebrow">Reservá online</span>
         <h2 class="section-title">Agendar Turno</h2>
+        <p class="section-sub">Completá el formulario y confirmamos tu turno al instante.</p>
         <div class="divider"><span></span><span class="diamond">◆</span><span></span></div>
       </div>
 
@@ -284,7 +285,6 @@ const scrollToForm = () => {
         <div class="fs-icon">🔐</div>
         <h2 class="fs-title">Administrador</h2>
         <p class="fs-sub">Ingresá tus credenciales</p>
-
         <div class="fs-form">
           <div class="field">
             <label>Usuario</label>
@@ -307,25 +307,16 @@ const scrollToForm = () => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap');
 
-/* ── RESET ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* ── ANTI-ZOOM iOS: todos los inputs a 18px ── */
-input, select, textarea, button {
-  font-size: 18px;
-  -webkit-text-size-adjust: 100%;
-}
 
 /* ── BASE ── */
 .page {
-  min-height: 50vh;
+  min-height: 100vh;
   background: #0d0d0d;
   font-family: 'Montserrat', sans-serif;
   position: relative;
   overflow-x: hidden;
   color: #f0e6d0;
-  /* Tamaño base grande para móvil */
-  font-size: 12px;
 }
 
 .bg-grid {
@@ -351,7 +342,7 @@ input, select, textarea, button {
   min-height: 50vh;
   display: flex; align-items: center; justify-content: center;
   text-align: center;
-  padding: 60px 24px 48px;
+  padding: 60px 20px 48px;
   border-bottom: 1px solid rgba(180,145,80,.1);
 }
 
@@ -359,42 +350,45 @@ input, select, textarea, button {
 
 .eyebrow {
   display: inline-block;
-  font-size: 1rem; letter-spacing: .35em;
+  font-size: 14px; letter-spacing: .35em;
   text-transform: uppercase; color: #b49150;
   margin-bottom: 20px;
 }
 
 .hero-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(3rem, 11vw, 7rem);
+  font-size: clamp(2.6rem, 10vw, 7rem);
   font-weight: 600; line-height: 1.1;
   color: #f0e6d0; margin-bottom: 16px;
   display: flex; flex-direction: column; gap: 8px;
 }
 .hero-title em {
   font-style: italic; color: #b49150;
-  font-size: clamp(1.4rem, 5vw, 2.8rem);
+  font-size: clamp(1.2rem, 4.5vw, 2.6rem);
 }
 
 .hero-sub {
-  font-size: 1.1rem; font-weight: 300;
+  font-size: 16px; font-weight: 300;
   color: #6a5c44; letter-spacing: .04em;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
 }
 
 .hero-actions {
   display: flex; flex-direction: column;
-  align-items: stretch; gap: 14px;
+  align-items: stretch; gap: 12px;
 }
 
-/* ── BOTÓN PRINCIPAL TIPO APP ── */
+/* ── BOTONES ── */
 .btn-main {
   width: 100%;
-  padding: 22px 20px;
+  /* Altura mínima de 56px — estándar táctil de apps móviles */
+  min-height: 56px;
+  padding: 0 20px;
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.1rem;
+  /* 16px mínimo iOS, usamos 17px para que se lea cómodo */
+  font-size: 17px;
   font-weight: 600;
-  letter-spacing: .12em;
+  letter-spacing: .1em;
   text-transform: uppercase;
   cursor: pointer;
   border: none;
@@ -406,60 +400,74 @@ input, select, textarea, button {
 }
 .btn-main:active { transform: scale(.97); }
 
-.btn-gold {
-  background: #b49150;
-  color: #0d0d0d;
-}
+.btn-gold { background: #b49150; color: #0d0d0d; }
 .btn-gold:hover { background: #c9a862; }
 .btn-gold:disabled { opacity: .6; cursor: not-allowed; }
 
 .btn-outline-gold {
   background: transparent;
   color: #b49150;
-  border: 2px solid rgba(180,145,80,.45) !important;
+  border: 2px solid rgba(180,145,80,.4) !important;
 }
 .btn-outline-gold:hover { border-color: #b49150 !important; }
 
 .btn-hero {
-  width: 100%;
-  padding: 22px 20px;
+  width: 100%; min-height: 56px;
+  padding: 0 20px;
   background: #b49150; color: #0d0d0d;
   border: none;
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.1rem; font-weight: 600;
-  letter-spacing: .12em; text-transform: uppercase;
-  cursor: pointer; transition: all .2s;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-.btn-ghost {
-  width: 100%;
-  padding: 22px 20px;
-  background: transparent; color: #8a7455;
-  border: 2px solid rgba(180,145,80,.22);
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.05rem; font-weight: 400;
+  font-size: 17px; font-weight: 600;
   letter-spacing: .1em; text-transform: uppercase;
   cursor: pointer; transition: all .2s;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.btn-ghost {
+  width: 100%; min-height: 56px;
+  padding: 0 20px;
+  background: transparent; color: #8a7455;
+  border: 2px solid rgba(180,145,80,.22);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px; font-weight: 400;
+  letter-spacing: .08em; text-transform: uppercase;
+  cursor: pointer; transition: all .2s;
+  -webkit-tap-highlight-color: transparent;
+  display: flex; align-items: center; justify-content: center;
 }
 .btn-ghost:hover { color: #b49150; border-color: rgba(180,145,80,.5); }
 
-/* ── SECCIÓN FORM ── */
+/* ── SECCIÓN FORM — ancho completo en móvil ── */
 .section-form {
   position: relative; z-index: 1;
-  max-width: 620px; margin: 0 auto;
-  padding: 48px 22px 60px;
+  /* Sin max-width en móvil → ocupa todo el ancho */
+  width: 100%;
+  padding: 48px 20px 60px;
+}
+
+/* Solo en desktop limitamos el ancho */
+@media (min-width: 640px) {
+  .section-form {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 60px 32px 80px;
+  }
 }
 
 .section-header { text-align: center; margin-bottom: 36px; }
 
 .section-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.6rem, 9vw, 4.5rem);
+  font-size: clamp(2.2rem, 8vw, 4rem);
   font-weight: 600; color: #f0e6d0;
-  letter-spacing: .06em; margin: 10px 0 20px;
+  letter-spacing: .06em; margin: 10px 0 14px;
+}
+
+.section-sub {
+  font-size: 15px; font-weight: 300;
+  color: #6a5c44; margin-bottom: 24px;
 }
 
 .divider {
@@ -467,36 +475,40 @@ input, select, textarea, button {
   justify-content: center; gap: 12px;
 }
 .divider span:not(.diamond) {
-  width: 70px; height: 1px;
+  width: 60px; height: 1px;
   background: linear-gradient(90deg, transparent, #b49150);
 }
 .divider span:last-child { background: linear-gradient(90deg, #b49150, transparent); }
-.diamond { font-size: .45rem; color: #b49150; }
+.diamond { font-size: .4rem; color: #b49150; }
 
 /* ── FORM ── */
-.form { display: flex; flex-direction: column; gap: 26px; }
+.form { display: flex; flex-direction: column; gap: 24px; }
 
-.field { display: flex; flex-direction: column; gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 8px; }
 
 .field label {
-  font-size: .9rem; letter-spacing: .15em;
+  /* 14px mínimo legible sin zoom */
+  font-size: 14px;
+  letter-spacing: .15em;
   text-transform: uppercase; color: #8a7455; font-weight: 500;
 }
 .req { color: #b49150; }
-.hint { font-size: .85rem; color: #4a3f30; }
+.hint { font-size: 14px; color: #4a3f30; }
 
-/* ── INPUTS GRANDES — 18px evita zoom iOS ── */
+/* ── INPUTS — 16px+ evita zoom automático en iOS ── */
 .field input,
 .field select,
 .field textarea {
   background: #1a1a1a;
-  border: 1px solid rgba(180,145,80,.22);
+  border: 1px solid rgba(180,145,80,.2);
   color: #e8dcc8;
   font-family: 'Montserrat', sans-serif;
   font-weight: 300;
-  /* 18px es el mínimo para no disparar zoom en iOS */
-  font-size: 18px !important;
-  padding: 20px 18px;
+  /* 16px es el umbral exacto donde iOS deja de hacer zoom */
+  font-size: 16px;
+  /* Altura táctil generosa: mínimo 52px */
+  min-height: 52px;
+  padding: 14px 16px;
   outline: none;
   width: 100%;
   -webkit-appearance: none;
@@ -504,6 +516,7 @@ input, select, textarea, button {
   transition: border-color .2s, background .2s;
   resize: none;
 }
+.field textarea { min-height: 90px; }
 .field input::placeholder,
 .field textarea::placeholder { color: #3a3028; }
 .field input:focus,
@@ -516,31 +529,32 @@ input, select, textarea, button {
 .field select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M1 1l7 7 7-7' stroke='%23b49150' stroke-width='2' fill='none'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 18px center;
+  background-position: right 16px center;
   background-color: #1a1a1a;
-  padding-right: 50px; cursor: pointer;
+  padding-right: 44px; cursor: pointer;
 }
-.field select option { background: #141414; color: #e8dcc8; font-size: 16px; }
+.field select option { background: #141414; color: #e8dcc8; }
 
-/* ── HORAS ── */
+/* ── HORAS — 3 columnas, bien grandes para el dedo ── */
 .horas-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 .hora-btn {
   background: #1a1a1a;
   border: 1px solid rgba(180,145,80,.2);
   color: #6a5c44;
-  /* Grande para toque fácil */
-  padding: 20px 8px;
-  font-size: 1rem;
+  min-height: 52px;
+  padding: 0;
+  font-size: 16px;
   cursor: pointer; transition: all .15s;
   font-family: 'Montserrat', sans-serif;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   border-radius: 0;
+  display: flex; align-items: center; justify-content: center;
 }
 .hora-btn:active { transform: scale(.94); }
 .hora-btn.active {
@@ -549,7 +563,7 @@ input, select, textarea, button {
 }
 
 .error-msg {
-  color: #e05555; font-size: 1rem;
+  color: #e05555; font-size: 15px;
   text-align: center;
 }
 
@@ -563,70 +577,76 @@ input, select, textarea, button {
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 .success-panel h3 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 2.8rem; font-weight: 600; color: #f0e6d0;
+  font-size: 2.6rem; font-weight: 600; color: #f0e6d0;
 }
-.success-panel p { color: #7a6a50; font-size: 1.1rem; font-weight: 300; }
+.success-panel p { color: #7a6a50; font-size: 16px; font-weight: 300; }
 
 /* ── FOOTER ── */
 .footer {
-  text-align: center; padding: 32px 24px;
+  text-align: center; padding: 28px 20px;
   border-top: 1px solid rgba(180,145,80,.08);
   position: relative; z-index: 1;
 }
-.footer-text { font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; color: #2e2820; }
+.footer-text { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: #2e2820; }
 
-/* ── PANTALLA COMPLETA (modal y login) ── */
+/* ── PANTALLA COMPLETA ── */
 .fullscreen-modal {
   position: fixed; inset: 0;
   background: #0d0d0d;
   z-index: 2000;
   display: flex; align-items: center; justify-content: center;
-  padding: 40px 24px;
+  padding: 40px 20px;
   overflow-y: auto;
 }
 
 .fs-inner {
-  width: 100%; max-width: 520px;
+  width: 100%;
   display: flex; flex-direction: column;
   align-items: center; text-align: center;
   position: relative;
 }
 
+@media (min-width: 640px) {
+  .fs-inner { max-width: 500px; }
+}
+
 .fs-close {
   position: absolute; top: -4px; right: 0;
   background: transparent; border: none;
-  color: #6a5c44; font-size: 1.8rem;
+  color: #6a5c44; font-size: 1.6rem;
   cursor: pointer; padding: 10px;
   line-height: 1; transition: color .2s;
   -webkit-tap-highlight-color: transparent;
+  min-height: 44px; min-width: 44px;
+  display: flex; align-items: center; justify-content: center;
 }
 .fs-close:hover { color: #b49150; }
 
-.fs-icon { font-size: 3rem; color: #b49150; margin-bottom: 20px; }
+.fs-icon { font-size: 2.8rem; color: #b49150; margin-bottom: 16px; }
 
 .fs-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.6rem, 9vw, 4rem);
+  font-size: clamp(2.4rem, 9vw, 3.8rem);
   font-weight: 600; color: #f0e6d0;
   letter-spacing: .04em; margin-bottom: 10px;
 }
 
 .fs-sub {
-  font-size: 1rem; font-weight: 300;
-  color: #6a5c44; letter-spacing: .04em;
-  margin-bottom: 36px;
+  font-size: 16px; font-weight: 300;
+  color: #6a5c44;
+  margin-bottom: 32px;
 }
 
 .fs-actions {
   width: 100%;
   display: flex; flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .fs-form {
   width: 100%;
   display: flex; flex-direction: column;
-  gap: 22px;
+  gap: 20px;
 }
 .fs-form .field { text-align: left; }
 
@@ -635,7 +655,7 @@ input, select, textarea, button {
 .fade-enter-from { opacity: 0; transform: translateY(-8px); }
 .fade-leave-to   { opacity: 0; transform: translateY(8px); }
 
-/* ── DESKTOP — vuelve a dos columnas ── */
+/* ── DESKTOP ── */
 @media (min-width: 640px) {
   .hero-actions { flex-direction: row; justify-content: center; }
   .btn-hero, .btn-ghost { width: auto; min-width: 260px; }
