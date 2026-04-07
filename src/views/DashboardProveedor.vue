@@ -330,7 +330,7 @@ onMounted(() => {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .screen {
-  min-height: 60vh;
+  min-height: 90vh;
   background: #0d0d0d;
   display: flex;
   align-items: flex-start;
