@@ -125,11 +125,7 @@
       />
     </div>
 
-    
-
-        <!-- 🔘 BOTONES -->
-        <div class="btn-row">
-          <div class="modal-field">
+    <div class="modal-field">
       <label>Confirmar nueva contraseña</label>
       <input
         v-model="passwordForm.confirmPassword"
@@ -155,6 +151,9 @@
     </div>
   </div>
 </div>
+
+        <!-- 🔘 BOTONES -->
+        <div class="btn-row">
           <button class="btn-primary" @click="cerrarSesion">
             <span>Cerrar sesión</span>
           </button>
@@ -468,7 +467,7 @@ onMounted(() => {
   padding: 0;
   font-family: 'Montserrat', sans-serif;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .bg-grid,
