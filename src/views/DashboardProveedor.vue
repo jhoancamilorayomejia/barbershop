@@ -481,7 +481,7 @@ h1 {
   background: transparent;
   border: 1px solid rgba(180,145,80,.12);
   color: #666;
-  font-size: 1.2rem;
+  font-size: 1rem;
   padding: 8px 4px 4px;
   cursor: pointer;
   transition: all .2s;
@@ -491,9 +491,8 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  min-height: 100%;
+  min-height: 60px;
   justify-content: center;
-  height: 100%;
 }
 .day-btn:hover {
   border-color: rgba(180,145,80,.5);
