@@ -333,9 +333,9 @@ onMounted(() => {
   min-height: 100vh;
   background: #0d0d0d;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 20px 10px;
   font-family: 'Montserrat', sans-serif;
   position: relative;
   overflow: hidden;
@@ -474,7 +474,7 @@ h1 {
   background: transparent;
   border: 1px solid rgba(180,145,80,.12);
   color: #666;
-  font-size: .78rem;
+  font-size: 1rem;
   padding: 8px 4px 4px;
   cursor: pointer;
   transition: all .2s;
@@ -484,7 +484,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  min-height: 42px;
+  min-height: 60px;
   justify-content: center;
 }
 .day-btn:hover {
@@ -656,8 +656,8 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   }
 
   .card {
-    max-width: 100%;
-    padding: 30px 16px;
+  max-width: 95vw;
+  padding: 40px 20px;
   }
 
   .day-btn {
