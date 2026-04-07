@@ -336,7 +336,6 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   padding: 0;
-  width: 0;
   font-family: 'Montserrat', sans-serif;
   position: relative;
   overflow: hidden;
@@ -479,7 +478,7 @@ h1 {
   border: 1px solid rgba(180,145,80,.12);
   color: #666;
   font-size: 1.6rem;
-  padding: 8px 4px 4px;
+  padding: 10px 6px 6px;
   cursor: pointer;
   transition: all .2s;
   font-family: 'Montserrat', sans-serif;
@@ -487,7 +486,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 6px;
   min-height: 100px;
   height: 100%;
   justify-content: center;
