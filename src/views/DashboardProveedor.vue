@@ -446,7 +446,8 @@ h1 {
 
 /* ── Calendario ── */
 .calendar {
-  max-width: 560px;
+  width: 100%;
+  height: 100%; /* 👈 clave */
 }
 
 .cal-header {
@@ -467,7 +468,7 @@ h1 {
 .cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 10px;
 }
 
 .day-cell.empty { background: transparent; }
@@ -476,7 +477,7 @@ h1 {
   background: transparent;
   border: 1px solid rgba(180,145,80,.12);
   color: #666;
-  font-size: 1rem;
+  font-size: 1.2rem;
   padding: 8px 4px 4px;
   cursor: pointer;
   transition: all .2s;
@@ -486,7 +487,8 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  min-height: 60px;
+  min-height: 100px;
+  height: 100%;
   justify-content: center;
 }
 .day-btn:hover {
