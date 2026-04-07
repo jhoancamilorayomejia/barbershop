@@ -95,9 +95,6 @@
 
         <!-- 🔘 BOTONES -->
         <div class="btn-row">
-          <button class="btn-primary" @click="volver">
-            <span>Volver</span>
-          </button>
           <button class="btn-primary" @click="cerrarSesion">
             <span>Cerrar sesión</span>
           </button>
@@ -592,6 +589,7 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   border: 1px solid #b49150;
   background: transparent;
   color: #b49150;
+  background: #b49150;
   letter-spacing: .3em;
   text-transform: uppercase;
   cursor: pointer;
