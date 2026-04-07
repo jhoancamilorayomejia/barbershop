@@ -543,7 +543,7 @@ table {
 thead { background: rgba(180,145,80,.1); }
 
 th, td {
-  padding: 10px 12px;
+  padding: 14px;
   border-bottom: 1px solid rgba(180,145,80,.2);
   text-align: center;
 }
