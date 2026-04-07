@@ -445,7 +445,11 @@ h1 {
 }
 
 /* ── Calendario ── */
-.calendar { width: 100%; }
+.calendar {
+  width: 100%;
+  max-width: 420px; /* 👈 controla qué tan ancho se ve */
+  margin: 0 auto;   /* 👈 lo centra horizontalmente */
+}
 
 .cal-header {
   display: grid;
