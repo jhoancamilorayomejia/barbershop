@@ -318,14 +318,14 @@ input, select, textarea, button {
 
 /* ── BASE ── */
 .page {
-  min-height: 100vh;
+  min-height: 50vh;
   background: #0d0d0d;
   font-family: 'Montserrat', sans-serif;
   position: relative;
   overflow-x: hidden;
   color: #f0e6d0;
   /* Tamaño base grande para móvil */
-  font-size: 18px;
+  font-size: 12px;
 }
 
 .bg-grid {
