@@ -239,11 +239,16 @@ const cambiarMes = (delta) => {
 
 // ── Sesión ────────────────────────────────────────────────────────
 
-const cerrarSesion = (mensaje = 'Sesión cerrada') => {
+const cerrarSesion = () => {
+  const confirmar = confirm('¿Seguro que deseas cerrar sesión?')
+
+  if (!confirmar) return
+
   localStorage.removeItem('token')
   localStorage.removeItem('rol')
   localStorage.removeItem('username')
-  alert(mensaje)
+
+  alert('Sesión cerrada correctamente')
   router.push('/api/login')
 }
 
@@ -541,7 +546,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   color: #f0e6d0;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 
 thead { background: rgba(180,145,80,.1); }

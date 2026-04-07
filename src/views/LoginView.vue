@@ -354,7 +354,7 @@ const scrollToForm = () => {
 
 .eyebrow {
   display: inline-block;
-  font-size: 14px; letter-spacing: .35em;
+  font-size: 26px; letter-spacing: .35em;
   text-transform: uppercase; color: #b49150;
   margin-bottom: 20px;
 }
@@ -372,7 +372,7 @@ const scrollToForm = () => {
 }
 
 .hero-sub {
-  font-size: 16px; font-weight: 300;
+  font-size: 26px; font-weight: 300;
   color: #6a5c44; letter-spacing: .04em;
   margin-bottom: 32px;
 }
@@ -465,7 +465,7 @@ const scrollToForm = () => {
 }
 
 .section-sub {
-  font-size: 15px; font-weight: 340;
+  font-size: 22px; font-weight: 340;
   color: #6a5c44; margin-bottom: 44px;
 }
 
@@ -492,7 +492,7 @@ const scrollToForm = () => {
   text-transform: uppercase; color: #8a7455; font-weight: 540;
 }
 .req { color: #b49150; }
-.hint { font-size: 18px; color: #4a3f30; }
+.hint { font-size: 24px; color: #4a3f30; }
 
 /* ── INPUTS — 16px+ evita zoom automático en iOS ── */
 .field input,
