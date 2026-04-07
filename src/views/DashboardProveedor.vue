@@ -126,12 +126,11 @@
     </div>
 
     
-     
-
 
         <!-- 🔘 BOTONES -->
         <div class="btn-row">
-           <label>Confirmar nueva contraseña</label>
+          <div class="modal-field">
+      <label>Confirmar nueva contraseña</label>
       <input
         v-model="passwordForm.confirmPassword"
         type="password"
@@ -155,6 +154,7 @@
       </button>
     </div>
   </div>
+</div>
           <button class="btn-primary" @click="cerrarSesion">
             <span>Cerrar sesión</span>
           </button>
