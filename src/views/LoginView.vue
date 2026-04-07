@@ -386,11 +386,11 @@ const scrollToForm = () => {
 .btn-main {
   width: 100%;
   /* Altura mínima de 56px — estándar táctil de apps móviles */
-  min-height: 60px;
+  min-height: 80px;
   padding: 0 20px;
   font-family: 'Montserrat', sans-serif;
   /* 16px mínimo iOS, usamos 17px para que se lea cómodo */
-  font-size: 19px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -445,14 +445,11 @@ const scrollToForm = () => {
 
 /* ── SECCIÓN FORM — ancho completo en móvil ── */
 .section-form {
-  position: relative;
-  z-index: 1;
-
   width: 100%;
-  max-width: 100%;   /* 🔥 evita que se encoja */
-  margin: 0;         /* 🔥 elimina centrado */
+  max-width: 600px;   /* 🔥 controla el ancho */
+  margin: 0 auto;     /* 🔥 lo centra */
   
-  padding: 48px 20px 60px;
+  padding: 60px 24px 80px; /* 🔥 más grande visualmente */
 }
 
 .section-header { text-align: center; margin-bottom: 36px; }
@@ -504,9 +501,9 @@ const scrollToForm = () => {
   font-family: 'Montserrat', sans-serif;
   font-weight: 340;
   /* 16px es el umbral exacto donde iOS deja de hacer zoom */
-  font-size: 16px;
+  font-size: 18px;
   /* Altura táctil generosa: mínimo 52px */
-  min-height: 72px;
+  min-height: 80px;
   padding: 20px 22px;
   outline: none;
   width: 100%;
@@ -599,15 +596,15 @@ const scrollToForm = () => {
 }
 
 .fs-inner {
-  width: 100%;
-  display: flex; flex-direction: column;
-  align-items: center; text-align: center;
-  position: relative;
+  width: 90%;
+  max-width: 90%;   /* 🔥 ocupa toda la pantalla */
+  padding: 20px;     /* opcional para respirar */
 }
 
 @media (min-width: 660px) {
-  .fs-inner { max-width: 520px; }
+  .fs-inner { max-width: 900px; } /* 🔥 más ancho en desktop */
 }
+
 
 .fs-close {
   position: absolute; top: -4px; right: 0;
@@ -625,7 +622,7 @@ const scrollToForm = () => {
 
 .fs-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.4rem, 9vw, 3.8rem);
+  font-size: clamp(3.5rem, 12vw, 5rem);
   font-weight: 600; color: #f0e6d0;
   letter-spacing: .04em; margin-bottom: 10px;
 }
@@ -645,7 +642,7 @@ const scrollToForm = () => {
 .fs-form {
   width: 100%;
   display: flex; flex-direction: column;
-  gap: 40px;
+  gap: 60px;
 }
 .fs-form .field { text-align: left; }
 
