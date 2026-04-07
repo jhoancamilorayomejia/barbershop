@@ -321,6 +321,16 @@ const scrollToForm = () => {
   padding: 0;
 }
 
+.form {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  background: #111;
+  padding: 24px;
+  border: 1px solid rgba(180,145,80,.15);
+  border-radius: 12px;
+}
+
 .bg-grid {
   position: fixed; inset: 0;
   background-image:
@@ -384,11 +394,11 @@ const scrollToForm = () => {
 .btn-main {
   width: 100%;
   /* Altura mínima de 56px — estándar táctil de apps móviles */
-  min-height: 56px;
+  min-height: 60px;
   padding: 0 20px;
   font-family: 'Montserrat', sans-serif;
   /* 16px mínimo iOS, usamos 17px para que se lea cómodo */
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
