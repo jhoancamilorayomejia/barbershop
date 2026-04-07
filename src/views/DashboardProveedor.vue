@@ -587,7 +587,7 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   padding: 13px 36px;
   border: 1px solid #b49150;
   background: transparent;
-  color: #b49150;
+  color: #000000;
   background: #b49150;
   letter-spacing: .3em;
   text-transform: uppercase;
