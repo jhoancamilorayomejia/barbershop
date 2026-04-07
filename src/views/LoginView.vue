@@ -317,6 +317,8 @@ const scrollToForm = () => {
   position: relative;
   overflow-x: hidden;
   color: #f0e6d0;
+  margin: 0;
+  padding: 0;
 }
 
 .bg-grid {
