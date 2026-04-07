@@ -331,9 +331,14 @@ onMounted(() => {
 
 .screen {
   min-height: 100vh;
-  padding: 0; /* ❌ elimina espacios */
+  background: #0d0d0d;
+  display: flex;
   align-items: flex-start;
-  justify-content: center; /* centra horizontal */
+  justify-content: center;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  overflow: hidden;
 }
 
 .bg-grid,
@@ -358,14 +363,23 @@ onMounted(() => {
 .glow.right { background: radial-gradient(circle, #b4915015, transparent 70%); bottom: -100px; right: -150px; }
 
 .card {
+  position: relative;
+  z-index: 10;
   width: 100%;
-  max-width: 100%;   /* ❌ quita límite */
-  height: 100vh;     /* 👈 ocupa toda la pantalla */
-  padding: 20px 10px; /* más compacto */
-  border: none;      /* opcional (más limpio tipo app) */
+  max-width: 100px;
+  height: 100vh;
+  background: #141414;
+  border: none;
+  box-shadow: 0 32px 80px rgba(0,0,0,.7);
+  padding: 20px 10px;
+  text-align: center;
 }
 
 .center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
   height: 100%;
   justify-content: flex-start;
 }
@@ -464,9 +478,22 @@ h1 {
 .day-cell.empty { background: transparent; }
 
 .day-btn {
-  min-height: 100%;
-  height: 100%;
+  background: transparent;
+  border: 1px solid rgba(180,145,80,.12);
+  color: #666;
   font-size: 1.2rem;
+  padding: 8px 4px 4px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: 'Montserrat', sans-serif;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 100%;
+  justify-content: center;
+  height: 100%;
 }
 .day-btn:hover {
   border-color: rgba(180,145,80,.5);
