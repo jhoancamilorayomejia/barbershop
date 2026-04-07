@@ -645,6 +645,7 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   gap: 10px;
   justify-content: center;
 }
-
-
+html, body, #app {
+  background: radial-gradient(circle at top, #0f2027, #0d0d0d);
+}
 </style>
