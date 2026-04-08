@@ -83,7 +83,7 @@
                 <!-- DERECHA: hora + botón -->
                 <div class="rc-side">
                   <span class="rc-time">
-                    {{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}
+                    Hora: {{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}
                   </span>
                   <button class="btn-delete" @click="abrirEliminar(r)">
                     Eliminar
