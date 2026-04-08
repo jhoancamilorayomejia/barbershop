@@ -77,7 +77,6 @@
                   <span class="rc-time">
                     {{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}
                   </span>
-                  <div class="rc-right"></div>
                   <span class="rc-note">{{ r.note || '—' }}</span>
                 </div>
                 <button class="btn-delete" @click="abrirEliminar(r)">
@@ -703,12 +702,10 @@ h1 {
   min-width: 0;
 }
 .rc-name {
-  font-size: .9rem;
-  color: #f0e6d0;
-  font-weight: 500;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 .rc-phone {
   font-size: .75rem;
@@ -719,7 +716,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 6px;
 }
 .rc-time {
   font-size: .9rem;
