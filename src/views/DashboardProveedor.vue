@@ -24,19 +24,17 @@
         </div>
 
         <!-- 🗓️ CALENDARIO -->
-        <div class="calendar">
+        <div class="calendar-wrapper">
           <div class="cal-header">
             <span v-for="dia in diasSemana" :key="dia">{{ dia }}</span>
           </div>
           <div class="cal-grid">
-            <!-- Espacios vacíos antes del primer día -->
             <div
               v-for="n in primerDiaSemana"
               :key="'empty-' + n"
               class="day-cell empty"
             ></div>
 
-            <!-- Días del mes -->
             <button
               v-for="dia in diasEnMes"
               :key="dia"
@@ -54,103 +52,49 @@
           </div>
         </div>
 
-        <!-- ✅ TABLA (visible solo al seleccionar fecha) -->
+        <!-- ✅ PANEL DE RESERVAS (visible solo al seleccionar fecha) -->
         <transition name="fade-slide">
-          <div v-if="fechaSeleccionada" class="table-section">
-            <p class="date-title">
-              Reservas del {{ fechaFormateada }}
-            </p>
+          <div v-if="fechaSeleccionada" class="panel-section" ref="panelRef">
 
-            <div class="table-container" v-if="reservasFiltradas.length">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>WhatsApp</th>
-                    <th>Hora</th>
-                    <th>Nota</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="r in reservasFiltradas" :key="r.id">
-                    <td>{{ r.name }}</td>
-                    <td>{{ r.phone }}</td>
-                    <td>{{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}</td>
-                    <td>{{ r.note || '—' }}</td>
-                    <!-- 🔴 BOTÓN ELIMINAR -->
-                    <td>
-                    <button class="btn-delete" @click="abrirEliminar(r)">
-                    Eliminar
-                    </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="panel-header">
+              <span class="panel-title">Reservas del {{ fechaFormateada }}</span>
+              <span class="badge-count">
+                {{ reservasFiltradas.length }} reserva{{ reservasFiltradas.length !== 1 ? 's' : '' }}
+              </span>
             </div>
 
-            <p v-else class="empty">No hay reservas para esta fecha.</p>
+            <div v-if="reservasFiltradas.length">
+              <div
+                v-for="r in reservasFiltradas"
+                :key="r.id"
+                class="reserva-card"
+              >
+                <div class="rc-info">
+                  <span class="rc-name">{{ r.name }}</span>
+                  <span class="rc-phone">{{ r.phone }}</span>
+                </div>
+                <div class="rc-meta">
+                  <span class="rc-time">
+                    {{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}
+                  </span>
+                  <span class="rc-note">{{ r.note || '—' }}</span>
+                </div>
+                <button class="btn-delete" @click="abrirEliminar(r)">
+                  Eliminar
+                </button>
+              </div>
+            </div>
+
+            <p v-else class="empty-state">No hay reservas para esta fecha.</p>
           </div>
         </transition>
 
         <!-- 🔑 BOTÓN CAMBIAR CLAVE -->
-<div class="btn-row" style="margin-top: 0">
-  <button class="btn-outline-gold" @click="mostrarCambioPassword = true">
-    Cambiar Clave
-  </button>
-</div>
-
-<!-- 🔑 MODAL CAMBIAR CONTRASEÑA -->
-<div v-if="mostrarCambioPassword" class="modal-overlay">
-  <div class="modal">
-    <h3>Cambiar Contraseña</h3>
-
-    <div class="modal-field">
-      <label>Contraseña actual</label>
-      <input
-        v-model="passwordForm.oldPassword"
-        type="password"
-        placeholder="Ingresa tu contraseña actual"
-        class="modal-input"
-      />
-    </div>
-
-    <div class="modal-field">
-      <label>Nueva contraseña</label>
-      <input
-        v-model="passwordForm.newPassword"
-        type="password"
-        placeholder="Mínimo 6 caracteres"
-        class="modal-input"
-      />
-    </div>
-
-    <div class="modal-field">
-      <label>Confirmar nueva contraseña</label>
-      <input
-        v-model="passwordForm.confirmPassword"
-        type="password"
-        placeholder="Repite la nueva contraseña"
-        class="modal-input"
-      />
-      <span v-if="passwordMismatch" class="error-text">Las contraseñas no coinciden</span>
-    </div>
-
-    <p v-if="passwordError" class="error-text" style="margin-bottom: 10px">{{ passwordError }}</p>
-    <p v-if="passwordSuccess" class="success-text" style="margin-bottom: 10px">{{ passwordSuccess }}</p>
-
-    <div class="modal-actions">
-      <button class="btn-outline" @click="cerrarModalPassword">Cancelar</button>
-      <button
-        class="btn-primary-sm"
-        :disabled="!canSubmitPassword || cambiandoPassword"
-        @click="handleChangePassword"
-      >
-        {{ cambiandoPassword ? 'Guardando...' : 'Actualizar' }}
-      </button>
-    </div>
-  </div>
-</div>
+        <div class="btn-row" style="margin-top: 0">
+          <button class="btn-outline-gold" @click="mostrarCambioPassword = true">
+            Cambiar Clave
+          </button>
+        </div>
 
         <!-- 🔘 BOTONES -->
         <div class="btn-row">
@@ -158,33 +102,83 @@
             <span>Cerrar sesión</span>
           </button>
         </div>
-        <!-- 🔴 MODAL ELIMINAR -->
-<div v-if="mostrarEliminar" class="modal-overlay">
-  <div class="modal">
-    <h3>Eliminar reserva</h3>
-    <p>
-      ¿Seguro que deseas eliminar la reserva de 
-      <strong>{{ reservaAEliminar?.name }}</strong>?
-    </p>
-
-    <div class="modal-actions">
-      <button class="btn-outline" @click="mostrarEliminar = false">
-        Cancelar
-      </button>
-
-      <button class="btn-delete" @click="eliminarReserva" :disabled="eliminando">
-        {{ eliminando ? 'Eliminando...' : 'Eliminar' }}
-      </button>
-    </div>
-  </div>
-</div>
       </div>
     </div>
+
+    <!-- 🔴 MODAL ELIMINAR -->
+    <div v-if="mostrarEliminar" class="modal-overlay">
+      <div class="modal">
+        <h3>Eliminar reserva</h3>
+        <p>
+          ¿Seguro que deseas eliminar la reserva de
+          <strong>{{ reservaAEliminar?.name }}</strong>?
+        </p>
+        <div class="modal-actions">
+          <button class="btn-outline" @click="mostrarEliminar = false">Cancelar</button>
+          <button class="btn-delete" @click="eliminarReserva" :disabled="eliminando">
+            {{ eliminando ? 'Eliminando...' : 'Eliminar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔑 MODAL CAMBIAR CONTRASEÑA -->
+    <div v-if="mostrarCambioPassword" class="modal-overlay">
+      <div class="modal">
+        <h3>Cambiar Contraseña</h3>
+
+        <div class="modal-field">
+          <label>Contraseña actual</label>
+          <input
+            v-model="passwordForm.oldPassword"
+            type="password"
+            placeholder="Ingresa tu contraseña actual"
+            class="modal-input"
+          />
+        </div>
+
+        <div class="modal-field">
+          <label>Nueva contraseña</label>
+          <input
+            v-model="passwordForm.newPassword"
+            type="password"
+            placeholder="Mínimo 6 caracteres"
+            class="modal-input"
+          />
+        </div>
+
+        <div class="modal-field">
+          <label>Confirmar nueva contraseña</label>
+          <input
+            v-model="passwordForm.confirmPassword"
+            type="password"
+            placeholder="Repite la nueva contraseña"
+            class="modal-input"
+          />
+          <span v-if="passwordMismatch" class="error-text">Las contraseñas no coinciden</span>
+        </div>
+
+        <p v-if="passwordError" class="error-text" style="margin-bottom: 10px">{{ passwordError }}</p>
+        <p v-if="passwordSuccess" class="success-text" style="margin-bottom: 10px">{{ passwordSuccess }}</p>
+
+        <div class="modal-actions">
+          <button class="btn-outline" @click="cerrarModalPassword">Cancelar</button>
+          <button
+            class="btn-primary-sm"
+            :disabled="!canSubmitPassword || cambiandoPassword"
+            @click="handleChangePassword"
+          >
+            {{ cambiandoPassword ? 'Guardando...' : 'Actualizar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -192,10 +186,10 @@ const reservas = ref([])
 const mostrarEliminar = ref(false)
 const reservaAEliminar = ref(null)
 const eliminando = ref(false)
+const panelRef = ref(null)
 
-// Estado del calendario
 const viewDate = ref(new Date())
-const fechaSeleccionada = ref(null) // 'YYYY-MM-DD'
+const fechaSeleccionada = ref(null)
 
 const MESES = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -219,6 +213,7 @@ const tokenExpirado = (token) => {
 }
 
 // ── Cambio de contraseña ──────────────────────────────────────────
+
 const mostrarCambioPassword = ref(false)
 const cambiandoPassword = ref(false)
 const passwordError = ref('')
@@ -277,7 +272,6 @@ const handleChangePassword = async () => {
     } else {
       passwordSuccess.value = data.message
       passwordForm.value = { oldPassword: '', newPassword: '', confirmPassword: '' }
-      // Cierra el modal luego de 1.5s
       setTimeout(() => cerrarModalPassword(), 1500)
     }
   } catch {
@@ -297,7 +291,7 @@ const mesActual = computed(() => {
 
 const primerDiaSemana = computed(() => {
   const d = new Date(viewDate.value.getFullYear(), viewDate.value.getMonth(), 1)
-  return d.getDay() // 0 = Dom
+  return d.getDay()
 })
 
 const diasEnMes = computed(() => {
@@ -306,7 +300,6 @@ const diasEnMes = computed(() => {
   return new Date(y, m + 1, 0).getDate()
 })
 
-// Extrae solo 'YYYY-MM-DD' de un campo que puede venir como '2026-04-07 16:00'
 const soloFecha = (str) => str ? str.slice(0, 10) : ''
 
 const fechasConReservas = computed(() =>
@@ -349,10 +342,24 @@ const esHoy = (dia) => {
   )
 }
 
-const seleccionarDia = (dia) => {
+const seleccionarDia = async (dia) => {
   const y = viewDate.value.getFullYear()
   const m = viewDate.value.getMonth()
-  fechaSeleccionada.value = fmtISO(y, m, dia)
+  const iso = fmtISO(y, m, dia)
+
+  // Si ya está seleccionado, deselecciona
+  if (fechaSeleccionada.value === iso) {
+    fechaSeleccionada.value = null
+    return
+  }
+
+  fechaSeleccionada.value = iso
+
+  // Scroll suave al panel tras renderizar
+  await nextTick()
+  if (panelRef.value) {
+    panelRef.value.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }
 }
 
 const cambiarMes = (delta) => {
@@ -366,18 +373,12 @@ const cambiarMes = (delta) => {
 
 const cerrarSesion = () => {
   const confirmar = confirm('¿Seguro que deseas cerrar sesión?')
-
   if (!confirmar) return
 
   localStorage.removeItem('token')
   localStorage.removeItem('rol')
   localStorage.removeItem('username')
-
   router.push('/api/login')
-}
-
-const volver = () => {
-  router.push('/dashboard')
 }
 
 // ── Fetch de reservas ─────────────────────────────────────────────
@@ -386,7 +387,6 @@ const obtenerReservas = async () => {
   try {
     const token = localStorage.getItem('token')
 
-    // Si no hay token o expiró, redirige sin alert ni borrar storage
     if (!token || tokenExpirado(token)) {
       router.push('/api/login')
       return
@@ -396,7 +396,6 @@ const obtenerReservas = async () => {
       headers: { Authorization: `Bearer ${token}` }
     })
 
-    // Solo limpia sesión si el backend confirma que el token es inválido
     if (res.status === 401) {
       localStorage.removeItem('token')
       localStorage.removeItem('rol')
@@ -426,21 +425,15 @@ const eliminarReserva = async () => {
 
     const res = await fetch(`/api/reservations/${reservaAEliminar.value.id}`, {
       method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     })
 
     const data = await res.json()
-
     if (!res.ok) throw new Error(data.error)
 
-    // 🔄 Recargar reservas
     await obtenerReservas()
-
     mostrarEliminar.value = false
     reservaAEliminar.value = null
-
   } catch (err) {
     alert(err.message)
   } finally {
@@ -464,7 +457,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: 40px 16px;
   font-family: 'Montserrat', sans-serif;
   position: relative;
   overflow: auto;
@@ -491,6 +484,7 @@ onMounted(() => {
 .glow.left  { background: radial-gradient(circle, #b4915025, transparent 70%); top: -100px; left: -150px; }
 .glow.right { background: radial-gradient(circle, #b4915015, transparent 70%); bottom: -100px; right: -150px; }
 
+/* ── Card principal ── */
 .card {
   position: relative;
   z-index: 10;
@@ -543,7 +537,6 @@ h1 {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-top: 6px;
 }
 
 .month-arrow {
@@ -573,20 +566,22 @@ h1 {
   text-align: center;
 }
 
-/* ── Calendario ── */
-.calendar {
+/* ── Calendario compacto ── */
+.calendar-wrapper {
   width: 100%;
-  height: 100%; /* 👈 clave */
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(180,145,80,.12);
+  padding: 16px;
 }
 
 .cal-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .cal-header span {
-  font-size: .85rem;
+  font-size: .72rem;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: #b49150;
@@ -597,41 +592,39 @@ h1 {
 .cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 14px;
+  gap: 4px;
 }
 
-.day-cell.empty { background: transparent; }
+.day-cell.empty { aspect-ratio: 1; }
 
 .day-btn {
+  aspect-ratio: 1;
   background: transparent;
-  border: 1px solid rgba(180,145,80,.12);
-  color: #666;
-  font-size: 1.6rem;
-  padding: 10px 6px 6px;
+  border: 1px solid transparent;
+  color: #555;
+  font-size: .85rem;
   cursor: pointer;
   transition: all .2s;
   font-family: 'Montserrat', sans-serif;
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  min-height: 100px;
-  height: 100%;
   justify-content: center;
+  gap: 4px;
+  width: 100%;
 }
 .day-btn:hover {
-  border-color: rgba(180,145,80,.5);
+  border-color: rgba(180,145,80,.4);
   color: #f0e6d0;
 }
 
 .day-btn.has-data {
   color: #f0e6d0;
-  border-color: rgba(180,145,80,.35);
+  border-color: rgba(180,145,80,.2);
 }
 
 .day-btn.today {
-  box-shadow: 0 0 0 1px rgba(180,145,80,.45);
+  box-shadow: 0 0 0 1px rgba(180,145,80,.5);
   color: #f0e6d0;
 }
 
@@ -641,7 +634,7 @@ h1 {
   border-color: #b49150;
   font-weight: 600;
 }
-.day-btn.selected .dot { background: #0d0d0d; }
+.day-btn.selected .dot { background: rgba(0,0,0,.4); }
 
 .dot {
   width: 4px; height: 4px;
@@ -650,51 +643,97 @@ h1 {
   flex-shrink: 0;
 }
 
-/* ── Tabla ── */
-.table-section { width: 100%; }
+/* ── Panel de reservas ── */
+.panel-section {
+  width: 100%;
+  border-top: 1px solid rgba(180,145,80,.2);
+  padding-top: 20px;
+}
 
-.date-title {
-  font-size: .68rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: #b49150;
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 14px;
 }
 
-.table-container {
-  width: 100%;
-  overflow-x: auto;
+.panel-title {
+  font-size: .68rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #b49150;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+.badge-count {
+  font-size: .65rem;
+  letter-spacing: .1em;
+  padding: 4px 12px;
+  border: 1px solid rgba(180,145,80,.3);
+  color: #b49150;
+  background: rgba(180,145,80,.08);
+}
+
+/* ── Tarjeta de reserva ── */
+.reserva-card {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px 16px;
+  align-items: center;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(180,145,80,.12);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  text-align: left;
+  transition: background .2s;
+}
+.reserva-card:hover {
+  background: rgba(180,145,80,.06);
+}
+.reserva-card:last-child { margin-bottom: 0; }
+
+.rc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.rc-name {
+  font-size: .9rem;
   color: #f0e6d0;
-  font-size: 1.2rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rc-phone {
+  font-size: .75rem;
+  color: #666;
 }
 
-thead { background: rgba(180,145,80,.1); }
-
-th, td {
-  padding: 22px;
-  border-bottom: 1px solid rgba(180,145,80,.2);
-  text-align: center;
+.rc-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
 }
-
-th {
+.rc-time {
+  font-size: .9rem;
   color: #b49150;
   font-weight: 500;
-  letter-spacing: .1em;
-  font-size: 1rem;
-  text-transform: uppercase;
+  white-space: nowrap;
+}
+.rc-note {
+  font-size: .72rem;
+  color: #555;
+  white-space: nowrap;
 }
 
-tbody tr:hover { background: rgba(180,145,80,.08); }
-
-.empty {
-  color: #555;
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #444;
   font-size: .82rem;
-  margin-top: 6px;
+  letter-spacing: .1em;
 }
 
 /* ── Botones ── */
@@ -703,20 +742,13 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 8px;
-}
-
-.table-container {
-  width: 100%;
-  overflow-x: auto;
 }
 
 .btn-primary {
   padding: 13px 36px;
   border: 1px solid #b49150;
-  background: transparent;
-  color: #000000;
   background: #b49150;
+  color: #0d0d0d;
   letter-spacing: .3em;
   text-transform: uppercase;
   cursor: pointer;
@@ -727,93 +759,7 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   min-height: 60px;
 }
 .btn-primary:hover {
-  background: #b49150;
-  color: #0d0d0d;
-}
-
-/* ── Transición ── */
-.fade-slide-enter-active {
-  transition: opacity .3s ease, transform .3s ease;
-}
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.btn-delete {
-  padding: 12px 16px;
-  border: 1px solid #c0392b;
-  background: transparent;
-  color: #c0392b;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: all .2s;
-}
-
-.btn-delete:hover {
-  background: #c0392b;
-  color: #fff;
-}
-
-/* MODAL (reutilizable) */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.modal {
-  background: #141414;
-  border: 1px solid rgba(180,145,80,.2);
-  padding: 30px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.modal h3 {
-  color: #f0e6d0;
-  margin-bottom: 10px;
-}
-
-.modal p {
-  color: #8a7455;
-  margin-bottom: 20px;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-}
-
-@media (max-width: 468px) {
-  html {
-    font-size: 18px;
-  }
-
-  .card {
-  max-width: 95vw;
-  padding: 40px 20px;
-  }
-
-  .day-btn {
-    min-height: 60px;
-    font-size: 1rem;
-  }
-
-  h1 {
-    font-size: 1rem;
-  }
-
-  .btn-primary {
-    width: 100%;
-    min-height: 60px;
-  }
+  background: #c9a96e;
 }
 
 .btn-outline-gold {
@@ -834,6 +780,81 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   background: rgba(180,145,80,.1);
 }
 
+.btn-delete {
+  padding: 8px 14px;
+  border: 1px solid rgba(192,57,43,.5);
+  background: transparent;
+  color: #c0392b;
+  font-size: .75rem;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.btn-delete:hover {
+  background: #c0392b;
+  color: #fff;
+}
+.btn-delete:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* ── Transición ── */
+.fade-slide-enter-active {
+  transition: opacity .3s ease, transform .3s ease;
+}
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background: #141414;
+  border: 1px solid rgba(180,145,80,.25);
+  padding: 36px 30px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.modal h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  color: #f0e6d0;
+  letter-spacing: .06em;
+  margin-bottom: 12px;
+}
+
+.modal p {
+  color: #8a7455;
+  font-size: .88rem;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.modal p strong {
+  color: #f0e6d0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
 .modal-field {
   display: flex;
   flex-direction: column;
@@ -843,7 +864,7 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
 }
 
 .modal-field label {
-  font-size: .7rem;
+  font-size: .65rem;
   letter-spacing: .15em;
   text-transform: uppercase;
   color: #b49150;
@@ -863,13 +884,30 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   border-color: #b49150;
 }
 
+.btn-outline {
+  padding: 10px 22px;
+  border: 1px solid rgba(180,145,80,.3);
+  color: #b49150;
+  background: transparent;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .78rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-outline:hover {
+  border-color: #b49150;
+  background: rgba(180,145,80,.08);
+}
+
 .btn-primary-sm {
   padding: 10px 24px;
   border: 1px solid #b49150;
   background: #b49150;
   color: #0d0d0d;
   font-family: 'Montserrat', sans-serif;
-  font-size: .8rem;
+  font-size: .78rem;
   letter-spacing: .15em;
   text-transform: uppercase;
   cursor: pointer;
@@ -892,18 +930,33 @@ tbody tr:hover { background: rgba(180,145,80,.08); }
   font-size: .78rem;
 }
 
-.btn-outline {
-  padding: 10px 20px;
-  border: 1px solid rgba(180,145,80,.3);
-  color: #000000;
-  background: #b49150;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .8rem;
-  cursor: pointer;
-  transition: all .2s;
-}
-.btn-outline:hover {
-  border-color: #b49150;
-  color: #b49150;
+/* ── Responsive ── */
+@media (max-width: 468px) {
+  .card {
+    max-width: 95vw;
+    padding: 40px 16px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .btn-primary,
+  .btn-outline-gold {
+    width: 100%;
+    min-height: 56px;
+  }
+
+  .reserva-card {
+    grid-template-columns: 1fr;
+  }
+
+  .rc-meta {
+    align-items: flex-start;
+  }
+
+  .btn-delete {
+    width: fit-content;
+  }
 }
 </style>
