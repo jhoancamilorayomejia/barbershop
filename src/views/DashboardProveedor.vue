@@ -77,11 +77,13 @@
                   <span class="rc-time">
                     {{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}
                   </span>
+                  <div class="rc-right"></div>
                   <span class="rc-note">{{ r.note || '—' }}</span>
                 </div>
                 <button class="btn-delete" @click="abrirEliminar(r)">
                   Eliminar
                 </button>
+                
               </div>
             </div>
 
@@ -677,9 +679,10 @@ h1 {
 
 /* ── Tarjeta de reserva ── */
 .reserva-card {
-  display: grid;
+  display: flex;
+  justify-content: space-between;
   grid-template-columns: 1fr auto auto;
-  gap: 12px 16px;
+  gap: 1rem;
   align-items: center;
   background: rgba(255,255,255,.03);
   border: 1px solid rgba(180,145,80,.12);
@@ -729,13 +732,22 @@ h1 {
   color: #555;
 
   white-space: normal;
+  overflow-wrap: break-word;
   word-break: break-word;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* 👈 máximo 2 líneas */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
+
+.rc-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0; /* 🔥 evita que se encoja */
+}
+
+.rc-left {
+  flex: 1; /* 🔥 ocupa todo el espacio disponible */
+  min-width: 0; /* 🔥 CLAVE para que el texto no se rompa mal */
+}
+
 
 .empty-state {
   text-align: center;
