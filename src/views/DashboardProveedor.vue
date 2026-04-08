@@ -191,7 +191,7 @@ const panelRef = ref(null)
 const viewDate = ref(new Date())
 const fechaSeleccionada = ref(null)
 // usuario logueado
-const user = ref(localStorage.getItem('user'))
+const user = ref(localStorage.getItem('username'))
 
 const MESES = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
