@@ -53,42 +53,48 @@
         </div>
 
         <!-- ✅ PANEL DE RESERVAS (visible solo al seleccionar fecha) -->
-        <transition name="fade-slide">
-          <div v-if="fechaSeleccionada" class="panel-section" ref="panelRef">
+<transition name="fade-slide">
+  <div v-if="fechaSeleccionada" class="panel-section" ref="panelRef">
 
-            <div class="panel-header">
-              <span class="panel-title">Reservas del {{ fechaFormateada }}</span>
-              <span class="badge-count">
-                {{ reservasFiltradas.length }} reserva{{ reservasFiltradas.length !== 1 ? 's' : '' }}
-              </span>
-            </div>
+    <div class="panel-header">
+      <span class="panel-title">Reservas del {{ fechaFormateada }}</span>
+      <span class="badge-count">
+        {{ reservasFiltradas.length }} reserva{{ reservasFiltradas.length !== 1 ? 's' : '' }}
+      </span>
+    </div>
 
-            <div v-if="reservasFiltradas.length">
-              <div
-                v-for="r in reservasFiltradas"
-                :key="r.id"
-                class="reserva-card"
-              >
-                <div class="rc-info">
-                  <span class="rc-name">{{ r.name }}</span>
-                  <span class="rc-phone">{{ r.phone }}</span>
-                </div>
-                <div class="rc-meta">
-                  <span class="rc-time">
-                    {{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}
-                  </span>
-                  <span class="rc-note">{{ r.note || '—' }}</span>
-                </div>
-                <button class="btn-delete" @click="abrirEliminar(r)">
-                  Eliminar
-                </button>
-                
-              </div>
-            </div>
+    <div v-if="reservasFiltradas.length">
+      <div
+        v-for="r in reservasFiltradas"
+        :key="r.id"
+        class="reserva-card"
+      >
+        <!-- IZQUIERDA -->
+        <div class="rc-info">
+          <span class="rc-name">{{ r.name }}</span>
+          <span class="rc-phone">+57 {{ r.phone }}</span>
+        </div>
 
-            <p v-else class="empty-state">No hay reservas para esta fecha.</p>
+        <!-- DERECHA -->
+        <div class="rc-side">
+          <div class="rc-meta">
+            <span class="rc-time">
+              {{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}
+            </span>
+            <span class="rc-note">{{ r.note || '—' }}</span>
           </div>
-        </transition>
+
+          <button class="btn-delete" @click="abrirEliminar(r)">
+            Eliminar
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <p v-else class="empty-state">No hay reservas para esta fecha.</p>
+  </div>
+</transition>
 
         <!-- 🔑 BOTÓN CAMBIAR CLAVE -->
         <div class="btn-row" style="margin-top: 0">
