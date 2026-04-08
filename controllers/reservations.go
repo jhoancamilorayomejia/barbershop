@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	//"fmt"
 	"net/http"
+	//"net/url"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jhoancamilorayomejia/barbershop/db"
@@ -14,6 +16,31 @@ type Reservation struct {
 	ReservationDate string `json:"reservation_date"` // 👈 AHORA STRING
 	Note            string `json:"note"`
 }
+
+/*func sendWhatsApp(res Reservation) {
+	phone := "573XXXXXXXXX" // 👈 TU número (con código país)
+	apikey := "1234567"     // 👈 tu API KEY de CallMeBot
+
+	msg := fmt.Sprintf(
+		"💈 Nueva Reserva\n👤 %s\n📞 %s\n📅 %s\n📝 %s",
+		res.Name,
+		res.Phone,
+		res.ReservationDate,
+		res.Note,
+	)
+
+	apiURL := fmt.Sprintf(
+		"https://api.callmebot.com/whatsapp.php?phone=%s&text=%s&apikey=%s",
+		phone,
+		url.QueryEscape(msg),
+		apikey,
+	)
+
+	_, err := http.Get(apiURL)
+	if err != nil {
+		fmt.Println("Error enviando WhatsApp:", err)
+	}
+} */
 
 func CreateReservation(c *gin.Context) {
 	var reservation Reservation
@@ -62,8 +89,8 @@ func CreateReservation(c *gin.Context) {
 	// ✅ Insertar
 	err = db.DB.QueryRow(
 		`INSERT INTO reservations (name, phone, reservation_date, note)
-		 VALUES ($1,$2,$3,$4)
-		 RETURNING id`,
+		VALUES ($1,$2,$3,$4)
+		RETURNING id`,
 		reservation.Name,
 		reservation.Phone,
 		reservation.ReservationDate,
@@ -77,6 +104,8 @@ func CreateReservation(c *gin.Context) {
 		})
 		return
 	}
+	// 🚀 ENVÍO DE WHATSAPP (NO BLOQUEA)
+	//go sendWhatsApp(reservation)
 
 	// ✅ Respuesta
 	c.JSON(http.StatusCreated, reservation)
