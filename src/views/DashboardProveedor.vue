@@ -6,9 +6,9 @@
 
     <div class="card center-card">
       <div class="center-content">
-        <span class="eyebrow">Iniciaste sesión</span>
+        <span class="eyebrow">Iniciaste sesión - {{ user }}</span>
 
-        <h1>Ver Listado de Reservas</h1>
+        <h1>Listado de Reservas</h1>
 
         <div class="divider">
           <span></span>
@@ -16,7 +16,7 @@
           <span></span>
         </div>
 
-        <!-- 📅 NAVEGACIÓN DE MES -->
+        <!-- 📅 CALENDARIO POR MES -->
         <div class="month-nav">
           <button class="month-arrow" @click="cambiarMes(-1)">&#8249;</button>
           <span class="month-label">{{ mesActual }}</span>
@@ -190,6 +190,8 @@ const panelRef = ref(null)
 
 const viewDate = ref(new Date())
 const fechaSeleccionada = ref(null)
+// usuario logueado
+const user = ref(localStorage.getItem('user'))
 
 const MESES = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
