@@ -727,7 +727,14 @@ h1 {
 .rc-note {
   font-size: .72rem;
   color: #555;
-  white-space: nowrap;
+
+  white-space: normal;
+  word-break: break-word;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 👈 máximo 2 líneas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .empty-state {
