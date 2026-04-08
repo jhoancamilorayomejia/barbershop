@@ -52,49 +52,49 @@
           </div>
         </div>
 
-        <!-- ✅ PANEL DE RESERVAS (visible solo al seleccionar fecha) -->
-<transition name="fade-slide">
-  <div v-if="fechaSeleccionada" class="panel-section" ref="panelRef">
+        <!-- ✅ PANEL DE RESERVAS -->
+        <transition name="fade-slide">
+          <div v-if="fechaSeleccionada" class="panel-section" ref="panelRef">
 
-    <div class="panel-header">
-      <span class="panel-title">Reservas del {{ fechaFormateada }}</span>
-      <span class="badge-count">
-        {{ reservasFiltradas.length }} reserva{{ reservasFiltradas.length !== 1 ? 's' : '' }}
-      </span>
-    </div>
+            <div class="panel-header">
+              <span class="panel-title">Reservas del {{ fechaFormateada }}</span>
+              <span class="badge-count">
+                {{ reservasFiltradas.length }} reserva{{ reservasFiltradas.length !== 1 ? 's' : '' }}
+              </span>
+            </div>
 
-    <div v-if="reservasFiltradas.length">
-      <div
-        v-for="r in reservasFiltradas"
-        :key="r.id"
-        class="reserva-card"
-      >
-        <!-- IZQUIERDA -->
-        <div class="rc-info">
-          <span class="rc-name">{{ r.name }}</span>
-          <span class="rc-phone">+57 {{ r.phone }}</span>
-        </div>
+            <div v-if="reservasFiltradas.length">
+              <div
+                v-for="r in reservasFiltradas"
+                :key="r.id"
+                class="reserva-card"
+              >
+                <!-- IZQUIERDA: nombre y teléfono -->
+                <div class="rc-info">
+                  <span class="rc-name">{{ r.name }}</span>
+                  <span class="rc-phone">+57 {{ r.phone }}</span>
+                </div>
 
-        <!-- DERECHA -->
-        <div class="rc-side">
-          <div class="rc-meta">
-            <span class="rc-time">
-              {{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}
-            </span>
-            <span class="rc-note">{{ r.note || '—' }}</span>
+                <!-- CENTRO: nota -->
+                <div class="rc-note-wrap">
+                  <span class="rc-note">{{ r.note || '—' }}</span>
+                </div>
+
+                <!-- DERECHA: hora + botón -->
+                <div class="rc-side">
+                  <span class="rc-time">
+                    {{ r.reservation_date.length > 10 ? r.reservation_date.slice(11) : '—' }}
+                  </span>
+                  <button class="btn-delete" @click="abrirEliminar(r)">
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <p v-else class="empty-state">No hay reservas para esta fecha.</p>
           </div>
-
-          <button class="btn-delete" @click="abrirEliminar(r)">
-            Eliminar
-          </button>
-        </div>
-
-      </div>
-    </div>
-
-    <p v-else class="empty-state">No hay reservas para esta fecha.</p>
-  </div>
-</transition>
+        </transition>
 
         <!-- 🔑 BOTÓN CAMBIAR CLAVE -->
         <div class="btn-row" style="margin-top: 0">
@@ -197,7 +197,6 @@ const panelRef = ref(null)
 
 const viewDate = ref(new Date())
 const fechaSeleccionada = ref(null)
-// usuario logueado
 const user = ref(localStorage.getItem('username'))
 
 const MESES = [
@@ -356,7 +355,6 @@ const seleccionarDia = async (dia) => {
   const m = viewDate.value.getMonth()
   const iso = fmtISO(y, m, dia)
 
-  // Si ya está seleccionado, deselecciona
   if (fechaSeleccionada.value === iso) {
     fechaSeleccionada.value = null
     return
@@ -364,7 +362,6 @@ const seleccionarDia = async (dia) => {
 
   fechaSeleccionada.value = iso
 
-  // Scroll suave al panel tras renderizar
   await nextTick()
   if (panelRef.value) {
     panelRef.value.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
@@ -684,10 +681,9 @@ h1 {
 
 /* ── Tarjeta de reserva ── */
 .reserva-card {
-  display: flex;
-  justify-content: space-between;
-  grid-template-columns: 1fr auto auto;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 12px;
   align-items: center;
   background: rgba(255,255,255,.03);
   border: 1px solid rgba(180,145,80,.12);
@@ -701,6 +697,7 @@ h1 {
 }
 .reserva-card:last-child { margin-bottom: 0; }
 
+/* Columna izquierda */
 .rc-info {
   display: flex;
   flex-direction: column;
@@ -708,49 +705,42 @@ h1 {
   min-width: 0;
 }
 .rc-name {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: .88rem;
+  color: #f0e6d0;
+  font-weight: 500;
+  line-height: 1.3;
+  word-break: break-word;
 }
 .rc-phone {
   font-size: .75rem;
   color: #666;
 }
 
-.rc-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-}
-.rc-time {
-  font-size: .9rem;
-  color: #b49150;
-  font-weight: 500;
-  white-space: nowrap;
+/* Columna central: nota */
+.rc-note-wrap {
+  min-width: 0;
 }
 .rc-note {
-  font-size: .72rem;
-  color: #555;
-
-  white-space: normal;
-  overflow-wrap: break-word;
+  font-size: .78rem;
+  color: #777;
+  line-height: 1.5;
   word-break: break-word;
 }
 
-.rc-right {
+/* Columna derecha: hora + botón */
+.rc-side {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0; /* 🔥 evita que se encoja */
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
 }
-
-.rc-left {
-  flex: 1; /* 🔥 ocupa todo el espacio disponible */
-  min-width: 0; /* 🔥 CLAVE para que el texto no se rompa mal */
+.rc-time {
+  font-size: .95rem;
+  color: #b49150;
+  font-weight: 600;
+  white-space: nowrap;
 }
-
 
 .empty-state {
   text-align: center;
@@ -766,6 +756,7 @@ h1 {
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
 }
 
 .btn-primary {
@@ -973,14 +964,20 @@ h1 {
 
   .reserva-card {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
 
-  .rc-meta {
-    align-items: flex-start;
+  .rc-note-wrap {
+    border-top: 1px solid rgba(180,145,80,.08);
+    padding-top: 6px;
   }
 
-  .btn-delete {
-    width: fit-content;
+  .rc-side {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(180,145,80,.08);
+    padding-top: 6px;
   }
 }
 </style>
